@@ -1,0 +1,1677 @@
+@charset "UTF-8";
+/**
+ * Asta - Main Stylesheet.
+ *
+ * A minimal CSS framework for creating monospace grid-based layouts.
+ * Import this single file to get all components.
+ *
+ * @author Antonio Roldao
+ * @license MIT
+ */
+/* Fonts */
+/**
+ * JetBrains Mono Font Face Declarations.
+ *
+ * Local font files for JetBrains Mono monospace typeface.
+ * Using woff2 format for optimal compression and browser support.
+ */
+/* Regular (400) */
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("../fonts/JetBrainsMono-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+/* Medium (500) */
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("../fonts/JetBrainsMono-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+/* SemiBold (600) */
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("../fonts/JetBrainsMono-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+/* ExtraBold (800) */
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("../fonts/JetBrainsMono-ExtraBold.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+/* Core Styles */
+/**
+ * A minimal reset to ensure consistent baseline styles across browsers.
+ */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers. */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+
+body {
+  line-height: 1;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+blockquote, q {
+  quotes: none;
+}
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: "";
+  content: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/**
+ * CSS Variables - Design Tokens.
+ *
+ * Core design system variables for the monospace web.
+ * Includes support for automatic dark mode via prefers-color-scheme.
+ */
+:root {
+  /* Typography. */
+  --font-family: "JetBrains Mono", monospace;
+  --line-height: 1.20rem;
+  /* Spacing & Layout. */
+  --border-thickness: 2px;
+  --char-width: 1ch; /* Character width for grid alignment. */
+  /* Spacing scale based on line-height. */
+  --spacing-half: calc(var(--line-height) / 2);
+  --spacing-1: var(--line-height);
+  --spacing-1-5: calc(var(--line-height) * 1.5);
+  --spacing-2: calc(var(--line-height) * 2);
+  /* Colors - Light Mode */
+  --text-color: #000;
+  --text-color-alt: #666;
+  --background-color: #fff;
+  --background-color-alt: #eee;
+  /* Font Weights */
+  --font-weight-normal: 500;
+  --font-weight-medium: 600;
+  --font-weight-bold: 800;
+  /* Base Font Settings */
+  font-family: var(--font-family);
+  font-optical-sizing: auto;
+  font-weight: var(--font-weight-normal);
+  font-style: normal;
+  font-variant-numeric: tabular-nums lining-nums;
+  font-size: 16px;
+}
+
+/* Theme color mixins */
+/* Dark Mode Support - System Preference. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme=light]) {
+    --text-color: #fff;
+    --text-color-alt: #aaa;
+    --background-color: #000;
+    --background-color-alt: #111;
+  }
+}
+/* Dark Mode - Manual Override. */
+:root[data-theme=dark] {
+  --text-color: #fff;
+  --text-color-alt: #aaa;
+  --background-color: #000;
+  --background-color-alt: #111;
+}
+
+/* Light Mode - Manual Override */
+:root[data-theme=light] {
+  --text-color: #000;
+  --text-color-alt: #666;
+  --background-color: #fff;
+  --background-color-alt: #eee;
+}
+
+/* Mobile Adjustments */
+@media screen and (max-width: 480px) {
+  :root {
+    font-size: 14px;
+  }
+}
+/**
+ * Base Styles.
+ *
+ * Foundation styles including layout, spacing rhythm, and box model.
+ */
+* {
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+/* Prevent all elements from causing horizontal overflow */
+img, video, iframe, table, pre, code {
+  max-width: 100%;
+}
+
+/* Vertical Rhythm - Consistent spacing between elements */
+* + * {
+  margin-top: var(--line-height);
+}
+
+html {
+  display: flex;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  flex-direction: column;
+  align-items: center;
+  background: var(--background-color);
+  color: var(--text-color);
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  padding: var(--line-height) 2ch;
+  line-height: var(--line-height);
+  overflow-x: hidden;
+  /* Fallback for browsers without round() support */
+  max-width: 80ch;
+  /* Modern browsers: snap to character boundaries */
+  max-width: min(80ch, round(down, 100%, var(--char-width)));
+}
+
+/* Toggles Container */
+.toggles-container {
+  display: flex;
+  align-items: center;
+  margin-top: 0;
+  width: 100%;
+}
+
+@media screen and (max-width: 480px) {
+  body {
+    padding: var(--line-height) 1ch;
+  }
+}
+/* Scrollbar */
+::-webkit-scrollbar {
+  height: var(--line-height);
+}
+
+/* Components */
+/**
+ * Typography Component.
+ *
+ * Styles for headings, paragraphs, links, emphasis, and code.
+ */
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: var(--font-weight-bold);
+  margin: var(--spacing-2) 0;
+  text-transform: uppercase;
+  line-height: calc(2 * var(--line-height));
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+}
+
+h3 {
+  font-size: 1.35rem;
+}
+
+h4 {
+  font-size: 1.2rem;
+}
+
+h5 {
+  font-size: 1.1rem;
+}
+
+/* Paragraphs. */
+p {
+  margin-bottom: var(--line-height);
+  word-break: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Links */
+a {
+  text-decoration-thickness: var(--border-thickness);
+}
+
+a:link, a:visited {
+  color: var(--text-color);
+}
+
+/* Text Emphasis. */
+strong, b {
+  font-weight: var(--font-weight-bold);
+}
+
+em, i {
+  font-style: italic;
+}
+
+/* Subscript */
+sub {
+  position: relative;
+  display: inline-block;
+  margin: 0;
+  vertical-align: sub;
+  line-height: 0;
+  width: 1.3333333333ch;
+  font-size: 0.75rem;
+}
+
+/* Code */
+pre, code {
+  font-family: var(--font-family);
+}
+
+code {
+  font-weight: var(--font-weight-medium);
+}
+
+pre {
+  white-space: pre;
+  overflow-x: auto;
+  margin: var(--line-height) 0;
+  overflow-y: hidden;
+  max-width: 100%;
+}
+
+@media screen and (max-width: 480px) {
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-x: auto;
+  }
+}
+figure pre {
+  margin: 0;
+}
+
+/* Figure Captions. */
+figure {
+  margin: calc(var(--line-height) * 2) 3ch;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+@media screen and (max-width: 480px) {
+  figure {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+figcaption {
+  display: block;
+  font-style: italic;
+  margin-top: var(--line-height);
+}
+
+/* Horizontal Rule. */
+hr {
+  position: relative;
+  display: block;
+  height: var(--line-height);
+  margin: calc(var(--line-height) * 1.5) 0;
+  border: none;
+  color: var(--text-color);
+}
+
+hr:after {
+  display: block;
+  content: "";
+  position: absolute;
+  top: calc(var(--line-height) / 2 - var(--border-thickness));
+  left: 0;
+  width: 100%;
+  border-top: calc(var(--border-thickness) * 3) double var(--text-color);
+  height: 0;
+}
+
+/**
+ * Tables Component
+ *
+ * Grid-aligned tables with utility classes for column sizing.
+ */
+table {
+  position: relative;
+  top: calc(var(--line-height) / 2);
+  border-collapse: collapse;
+  margin: 0 0 calc(var(--line-height) * 2);
+  /* Fallback for browsers without round() support */
+  width: 100%;
+  max-width: 100%;
+  /* Modern browsers: snap to character boundaries */
+  width: round(down, 100%, var(--char-width));
+  /* Prevent overflow on mobile */
+  overflow-x: auto;
+  display: block;
+}
+
+@media screen and (max-width: 768px) {
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+th, td {
+  border: var(--border-thickness) solid var(--text-color);
+  padding: calc(var(--line-height) / 2) calc(1ch - var(--border-thickness) / 2) calc(var(--line-height) / 2 - (var(--border-thickness)));
+  line-height: var(--line-height);
+  vertical-align: top;
+  text-align: left;
+}
+
+table tbody tr:first-child > * {
+  padding-top: calc(var(--line-height) / 2 - var(--border-thickness));
+}
+
+th {
+  font-weight: 700;
+}
+
+/* Utility Classes for Column Width */
+.width-min {
+  width: 0%;
+}
+
+.width-auto {
+  width: 100%;
+}
+
+/* Header Table Styling */
+.header {
+  margin-bottom: calc(var(--line-height) * 2);
+}
+
+.header h1 {
+  margin: 0;
+}
+
+.header tr td:last-child {
+  text-align: right;
+}
+
+/**
+ * Forms Component
+ *
+ * Inputs, buttons, labels, checkboxes, and radio buttons aligned to the grid.
+ */
+input, button, textarea {
+  border: var(--border-thickness) solid var(--text-color);
+  padding: calc(var(--line-height) / 2 - var(--border-thickness)) calc(1ch - var(--border-thickness));
+  margin: 0;
+  font: inherit;
+  height: calc(var(--line-height) * 2);
+  width: auto;
+  overflow: visible;
+  background: var(--background-color);
+  color: var(--text-color);
+  line-height: normal;
+  -webkit-font-smoothing: inherit;
+  -moz-osx-font-smoothing: inherit;
+  -webkit-appearance: none;
+}
+
+/* Checkboxes and Radio Buttons */
+input[type=checkbox],
+input[type=radio] {
+  display: inline-grid;
+  place-content: center;
+  vertical-align: top;
+  width: 2ch;
+  height: var(--line-height);
+  cursor: pointer;
+}
+
+input[type=checkbox]:checked:before,
+input[type=radio]:checked:before {
+  content: "";
+  width: 1ch;
+  height: calc(var(--line-height) / 2);
+  background: var(--text-color);
+}
+
+input[type=radio],
+input[type=radio]:before {
+  border-radius: 100%;
+}
+
+/* Focus States */
+button:focus, input:focus {
+  --border-thickness: 3px;
+  outline: none;
+}
+
+/* Text Input */
+input {
+  width: round(down, 100%, 1ch);
+}
+
+::placeholder {
+  color: var(--text-color-alt);
+  opacity: 1;
+}
+
+::-ms-input-placeholder {
+  color: var(--text-color-alt);
+}
+
+/* Buttons */
+button::-moz-focus-inner {
+  padding: 0;
+  border: 0;
+}
+
+button {
+  text-transform: uppercase;
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+}
+
+button:hover {
+  background: var(--background-color-alt);
+}
+
+button:active {
+  transform: translate(2px, 2px);
+}
+
+/* Labels */
+label {
+  display: block;
+  width: round(down, 100%, 1ch);
+  height: auto;
+  line-height: var(--line-height);
+  font-weight: var(--font-weight-medium);
+  margin: 0;
+}
+
+label input {
+  width: 100%;
+}
+
+/* Add extra vertical spacing between form elements */
+form > label,
+form > button,
+form > .radio-group {
+  margin-top: calc(var(--line-height) * 1.5);
+}
+
+form > label:first-child,
+form > button:first-of-type {
+  margin-top: var(--line-height);
+}
+
+/* Radio Group - Display radio buttons inline */
+.radio-group {
+  display: flex;
+  gap: 2ch;
+  flex-wrap: wrap;
+}
+
+.radio-group label {
+  margin-top: 0;
+  width: auto;
+}
+
+/**
+ * Lists Component
+ *
+ * Unordered lists, ordered lists, and tree-style lists.
+ */
+ul, ol {
+  padding: 0;
+  margin: 0 0 var(--line-height);
+}
+
+/* Unordered Lists */
+ul {
+  list-style-type: square;
+  padding: 0 0 0 2ch;
+}
+
+/* Ordered Lists */
+ol {
+  list-style-type: none;
+  counter-reset: item;
+  padding: 0;
+}
+
+ol li:before {
+  content: counters(item, ".") ". ";
+  counter-increment: item;
+  font-weight: var(--font-weight-medium);
+}
+
+/* Nested Lists */
+ol ul,
+ol ol,
+ul ol,
+ul ul {
+  padding: 0 0 0 3ch;
+  margin: 0;
+}
+
+/* List Items */
+li {
+  margin: 0;
+  padding: 0;
+}
+
+li::marker {
+  line-height: 0;
+}
+
+/* Tree-Style Lists */
+.tree, .tree ul {
+  position: relative;
+  padding-left: 0;
+  list-style-type: none;
+  line-height: var(--line-height);
+}
+
+.tree ul {
+  margin: 0;
+}
+
+.tree ul li {
+  position: relative;
+  padding-left: 1.5ch;
+  margin-left: 1.5ch;
+  border-left: var(--border-thickness) solid var(--text-color);
+}
+
+.tree ul li:before {
+  position: absolute;
+  display: block;
+  top: calc(var(--line-height) / 2);
+  left: 0;
+  content: "";
+  width: 1ch;
+  border-bottom: var(--border-thickness) solid var(--text-color);
+}
+
+.tree ul li:last-child {
+  border-left: none;
+}
+
+.tree ul li:last-child:after {
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  content: "";
+  height: calc(var(--line-height) / 2);
+  border-left: var(--border-thickness) solid var(--text-color);
+}
+
+/**
+ * Grid Component
+ *
+ * 12-column grid system using flexbox with gap.
+ * Use with .grid container and .column/.columns classes.
+ */
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1ch;
+  margin-bottom: var(--line-height);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.column,
+.columns {
+  box-sizing: border-box;
+  flex-grow: 0;
+  flex-shrink: 0;
+  margin-top: 0;
+}
+
+/* Ensure children fill their column containers */
+.column > *,
+.columns > * {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Generate column widths using SCSS loop */
+.one.column,
+.one.columns {
+  flex-basis: calc((100% - 11ch) / 12 * 1 + 0ch);
+}
+
+.two.column,
+.two.columns {
+  flex-basis: calc((100% - 11ch) / 12 * 2 + 1ch);
+}
+
+.three.column,
+.three.columns {
+  flex-basis: calc((100% - 11ch) / 12 * 3 + 2ch);
+}
+
+.four.column,
+.four.columns {
+  flex-basis: calc((100% - 11ch) / 12 * 4 + 3ch);
+}
+
+.five.column,
+.five.columns {
+  flex-basis: calc((100% - 11ch) / 12 * 5 + 4ch);
+}
+
+.six.column,
+.six.columns {
+  flex-basis: calc((100% - 11ch) / 12 * 6 + 5ch);
+}
+
+.seven.column,
+.seven.columns {
+  flex-basis: calc((100% - 11ch) / 12 * 7 + 6ch);
+}
+
+.eight.column,
+.eight.columns {
+  flex-basis: calc((100% - 11ch) / 12 * 8 + 7ch);
+}
+
+.nine.column,
+.nine.columns {
+  flex-basis: calc((100% - 11ch) / 12 * 9 + 8ch);
+}
+
+.ten.column,
+.ten.columns {
+  flex-basis: calc((100% - 11ch) / 12 * 10 + 9ch);
+}
+
+.eleven.column,
+.eleven.columns {
+  flex-basis: calc((100% - 11ch) / 12 * 11 + 10ch);
+}
+
+.twelve.column,
+.twelve.columns {
+  flex-basis: 100%;
+}
+
+/* Fraction-based columns */
+.one-third.column {
+  flex-basis: calc((100% - 11ch) / 3);
+}
+
+.two-thirds.column {
+  flex-basis: calc((100% - 11ch) / 3 * 2 + 1ch);
+}
+
+.one-half.column {
+  flex-basis: calc((100% - 11ch) / 2);
+}
+
+/* Generate offsets using SCSS loop */
+.offset-by-one.column,
+.offset-by-one.columns {
+  margin-left: calc((100% - 11ch) / 12 * 1 + 2ch);
+}
+
+.offset-by-two.column,
+.offset-by-two.columns {
+  margin-left: calc((100% - 11ch) / 12 * 2 + 3ch);
+}
+
+.offset-by-three.column,
+.offset-by-three.columns {
+  margin-left: calc((100% - 11ch) / 12 * 3 + 4ch);
+}
+
+.offset-by-four.column,
+.offset-by-four.columns {
+  margin-left: calc((100% - 11ch) / 12 * 4 + 5ch);
+}
+
+.offset-by-five.column,
+.offset-by-five.columns {
+  margin-left: calc((100% - 11ch) / 12 * 5 + 6ch);
+}
+
+.offset-by-six.column,
+.offset-by-six.columns {
+  margin-left: calc((100% - 11ch) / 12 * 6 + 7ch);
+}
+
+.offset-by-seven.column,
+.offset-by-seven.columns {
+  margin-left: calc((100% - 11ch) / 12 * 7 + 8ch);
+}
+
+.offset-by-eight.column,
+.offset-by-eight.columns {
+  margin-left: calc((100% - 11ch) / 12 * 8 + 9ch);
+}
+
+.offset-by-nine.column,
+.offset-by-nine.columns {
+  margin-left: calc((100% - 11ch) / 12 * 9 + 10ch);
+}
+
+.offset-by-ten.column,
+.offset-by-ten.columns {
+  margin-left: calc((100% - 11ch) / 12 * 10 + 11ch);
+}
+
+.offset-by-eleven.column,
+.offset-by-eleven.columns {
+  margin-left: calc((100% - 11ch) / 12 * 11 + 12ch);
+}
+
+/* Fraction offsets */
+.offset-by-one-third.column,
+.offset-by-one-third.columns {
+  margin-left: calc((100% - 11ch) / 3 + 1ch);
+}
+
+.offset-by-two-thirds.column,
+.offset-by-two-thirds.columns {
+  margin-left: calc((100% - 11ch) / 3 * 2 + 2ch);
+}
+
+.offset-by-one-half.column,
+.offset-by-one-half.columns {
+  margin-left: calc((100% - 11ch) / 2 + 1ch);
+}
+
+/**
+ * Media Component
+ *
+ * Images and videos that maintain grid alignment.
+ * Requires JavaScript (asta.js) for proper grid-aligned padding.
+ */
+img, video {
+  display: block;
+  width: 100%;
+  object-fit: contain;
+  overflow: hidden;
+}
+
+img {
+  font-style: italic;
+  color: var(--text-color-alt);
+}
+
+/**
+ * Details/Summary Component
+ *
+ * Collapsible sections with custom markers.
+ */
+details {
+  border: var(--border-thickness) solid var(--text-color);
+  padding: calc(var(--line-height) - var(--border-thickness)) 1ch;
+  margin-bottom: var(--line-height);
+}
+
+summary {
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  padding-left: 1ch;
+}
+
+details[open] summary {
+  margin-bottom: var(--line-height);
+}
+
+Casummary::marker {
+  display: inline-block;
+  content: "▶ ";
+  margin: 0;
+}
+
+details[open] > summary::marker {
+  content: "▼ ";
+}
+
+details :last-child {
+  margin-bottom: 0;
+}
+
+/**
+ * Navigation Menu Component
+ *
+ * Mobile-friendly navigation with hamburger toggle.
+ */
+.nav-menu {
+  position: relative;
+  border: var(--border-thickness) solid var(--text-color);
+  padding: calc(var(--line-height) / 2) 1ch;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* Hamburger Toggle Button */
+.nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  width: calc(var(--line-height) * 1.5);
+  height: calc(var(--line-height) * 1.5);
+  position: relative;
+  margin-left: auto;
+}
+
+.nav-toggle:hover {
+  opacity: 0.7;
+}
+
+/* Hamburger Icon - Three Lines */
+.nav-toggle-icon,
+.nav-toggle-icon::before,
+.nav-toggle-icon::after {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: var(--text-color);
+  position: absolute;
+  left: 0;
+  transition: transform 0.3s ease;
+}
+
+.nav-toggle-icon {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.nav-toggle-icon::before,
+.nav-toggle-icon::after {
+  content: "";
+}
+
+.nav-toggle-icon::before {
+  top: -6px;
+}
+
+.nav-toggle-icon::after {
+  top: 6px;
+}
+
+/* X icon when menu is open */
+.nav-menu.open .nav-toggle-icon {
+  background: transparent;
+}
+
+.nav-menu.open .nav-toggle-icon::before {
+  transform: rotate(45deg);
+  top: 0;
+}
+
+.nav-menu.open .nav-toggle-icon::after {
+  transform: rotate(-45deg);
+  top: 0;
+}
+
+/* Navigation List */
+.nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 2ch;
+  flex-wrap: wrap;
+}
+
+.nav-list li {
+  margin: 0;
+}
+
+.nav-list a {
+  text-decoration: none;
+  color: var(--text-color);
+}
+
+.nav-list a:hover {
+  text-decoration: underline;
+}
+
+/* Mobile: Show hamburger, hide menu by default */
+@media screen and (max-width: 768px) {
+  .nav-toggle {
+    display: block;
+  }
+  .nav-list {
+    display: none;
+    flex-direction: column;
+    gap: calc(var(--line-height) / 2);
+    margin-top: calc(var(--line-height) / 2);
+    padding-top: calc(var(--line-height) / 2);
+    border-top: var(--border-thickness) solid var(--text-color);
+    width: 100%;
+    flex-basis: 100%;
+  }
+  .nav-menu.open .nav-list {
+    display: flex;
+  }
+}
+/**
+ * Modal Component
+ *
+ * Dialog boxes for information, confirmation, and error messages.
+ */
+/* Modal Container - Hidden by default */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal.open {
+  display: flex;
+}
+
+/* Backdrop/Overlay */
+.modal-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+}
+
+/* Modal Content Box */
+.modal-content {
+  position: relative;
+  background: var(--background-color);
+  border: calc(var(--border-thickness) * 2) solid var(--text-color);
+  padding: var(--line-height) 2ch;
+  max-width: 60ch;
+  width: 90%;
+  z-index: 1001;
+  box-shadow: 4px 4px 0 var(--text-color);
+}
+
+/* Modal Header */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0;
+  margin-bottom: var(--line-height);
+}
+
+.modal-header h4 {
+  margin: 0;
+}
+
+/* Close Button */
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  width: auto;
+  height: auto;
+  min-width: 2ch;
+  text-align: center;
+}
+
+.modal-close:hover {
+  opacity: 0.7;
+  background: none;
+}
+
+/* Modal Body */
+.modal-body {
+  margin-bottom: var(--line-height);
+}
+
+.modal-body p {
+  margin: 0;
+}
+
+/* Modal Footer */
+.modal-footer {
+  display: flex;
+  gap: 1ch;
+  justify-content: flex-end;
+  margin-top: var(--line-height);
+}
+
+.modal-footer button {
+  margin-top: 0;
+}
+
+/* Modal Type Variations */
+.modal-info {
+  border-color: var(--text-color);
+}
+
+.modal-confirm .modal-header h4::before {
+  content: "⚠ ";
+}
+
+.modal-error {
+  border-color: var(--text-color);
+}
+
+.modal-error .modal-header h4::before {
+  content: "✖ ";
+}
+
+/**
+ * Footer Component
+ *
+ * Page footer with basic styling.
+ */
+footer {
+  margin-top: calc(var(--line-height) * 2);
+  padding-top: var(--line-height);
+  border-top: var(--border-thickness) solid var(--text-color);
+  text-align: center;
+}
+
+footer p {
+  margin-top: calc(var(--line-height) / 2);
+}
+
+footer p:first-child {
+  margin-top: 0;
+}
+
+/**
+ * Theme Toggle Component.
+ *
+ * Toggle switch for light/dark mode with minimal SVG icons.
+ */
+.theme-toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 1ch;
+  cursor: pointer;
+  user-select: none;
+  margin-left: auto;
+  width: fit-content;
+  flex-shrink: 0;
+}
+
+.theme-toggle {
+  position: relative;
+  display: inline-block;
+  width: 3ch;
+  height: calc(var(--line-height) * 1.5);
+  margin: 0;
+  padding: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+/* Remove focus outline but add subtle hover effect. */
+.theme-toggle:focus {
+  outline: none;
+}
+
+.theme-toggle:hover {
+  opacity: 0.7;
+}
+
+/* Icon container - applies to all states. */
+input[type=checkbox].theme-toggle:before,
+input[type=checkbox].theme-toggle:checked:before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* Override forms.css checkbox default styling. */
+  width: calc(var(--line-height) * 1) !important;
+  height: calc(var(--line-height) * 1) !important;
+  background: none !important;
+  /* SVG icon styling. */
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+/* DEFAULT: LIGHT MODE - Show sun icon (black). */
+input[type=checkbox].theme-toggle:before,
+input[type=checkbox].theme-toggle:checked:before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cline x1='12' y1='1' x2='12' y2='4'/%3E%3Cline x1='12' y1='20' x2='12' y2='23'/%3E%3Cline x1='4.22' y1='4.22' x2='6.34' y2='6.34'/%3E%3Cline x1='17.66' y1='17.66' x2='19.78' y2='19.78'/%3E%3Cline x1='1' y1='12' x2='4' y2='12'/%3E%3Cline x1='20' y1='12' x2='23' y2='12'/%3E%3Cline x1='4.22' y1='19.78' x2='6.34' y2='17.66'/%3E%3Cline x1='17.66' y1='6.34' x2='19.78' y2='4.22'/%3E%3C/svg%3E") !important;
+}
+
+/* DARK MODE - Show moon icon (white). */
+:root[data-theme=dark] input[type=checkbox].theme-toggle:before,
+:root[data-theme=dark] input[type=checkbox].theme-toggle:checked:before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'/%3E%3C/svg%3E") !important;
+}
+
+/* System preference dark mode - show moon icon (white). */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme=light]) input[type=checkbox].theme-toggle:before,
+  :root:not([data-theme=light]) input[type=checkbox].theme-toggle:checked:before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'/%3E%3C/svg%3E") !important;
+  }
+}
+/**
+ * Example Component
+ *
+ * Shows component examples with toggleable source code.
+ */
+.example {
+  margin-top: var(--line-height);
+}
+
+.example-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0;
+  margin-bottom: calc(var(--line-height) / 2);
+}
+
+.example-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: var(--font-weight-medium);
+}
+
+.example-toggle {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  width: calc(var(--line-height) * 1.5);
+  height: calc(var(--line-height) * 1.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.example-toggle:hover {
+  transform: scale(1.15);
+  background: unset;
+}
+
+.example-toggle:active {
+  transform: none;
+}
+
+.example-toggle svg {
+  width: 100%;
+  height: 100%;
+  stroke: var(--text-color);
+  fill: none;
+}
+
+.example-demo {
+  /* Demo area has no additional margin */
+  margin-top: 0;
+}
+
+.example-demo > *:first-child {
+  margin-top: 0;
+}
+
+.example-code {
+  display: none;
+  margin-top: var(--line-height);
+}
+
+.example-code.visible,
+.example.open .example-code {
+  display: block;
+}
+
+.example-code pre {
+  margin-top: 0;
+  background: var(--background-color-alt);
+  padding: calc(var(--line-height) / 2) 1ch;
+  overflow-x: auto;
+}
+
+.example-code code {
+  background: none;
+  padding: 0;
+}
+
+.code-copy-button {
+  position: absolute;
+  top: calc(var(--line-height) / 2);
+  right: 1ch;
+  background: transparent;
+  border: unset;
+  padding: calc(var(--line-height) / 4);
+  width: calc(var(--line-height) * 1.5);
+  height: calc(var(--line-height) * 1.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin: 0;
+  transition: transform 0.2s ease;
+}
+
+.code-copy-button:hover {
+  transform: scale(1.15);
+}
+
+.code-copy-button:active {
+  transform: none;
+}
+
+.code-copy-button svg {
+  width: 100%;
+  height: 100%;
+  stroke: var(--text-color);
+  fill: none;
+}
+
+/* Grid layout for side-by-side on larger screens */
+@media screen and (min-width: 1200px) {
+  .example.side-by-side .example-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2ch;
+  }
+  .example.side-by-side .example-code {
+    display: block;
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+    border-left: var(--border-thickness) solid var(--text-color);
+    padding-left: calc(2ch - var(--border-thickness));
+  }
+  .example.side-by-side .example-toggle {
+    display: none;
+  }
+}
+/**
+ * Debug Utilities
+ *
+ * Visual debugging tools to verify grid alignment.
+ * Activated by adding .debug class to body (via JavaScript).
+ */
+.debug .debug-grid {
+  --color: color-mix(in srgb, var(--text-color) 10%, var(--background-color) 90%);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  background-image: repeating-linear-gradient(var(--color) 0 1px, transparent 1px 100%), repeating-linear-gradient(90deg, var(--color) 0 1px, transparent 1px 100%);
+  background-size: 1ch var(--line-height);
+  margin: 0;
+}
+
+.debug .off-grid {
+  background: rgba(255, 0, 0, 0.1);
+}
+
+.debug-toggle-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 1ch;
+  cursor: pointer;
+  user-select: none;
+  margin: 0;
+  width: fit-content;
+  flex-shrink: 0;
+}
+
+/* ========================================================================== */
+/* x402 Protocol Custom Styles                                               */
+/* ========================================================================== */
+
+/* Header */
+header {
+  text-align: center;
+  padding-bottom: calc(var(--line-height) * 2);
+  border-bottom: var(--border-thickness) solid var(--text-color-alt);
+}
+
+header h1 {
+  margin: 0 0 calc(var(--line-height) / 2) 0;
+  font-size: 2rem;
+  line-height: calc(var(--line-height) * 2);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.1ch;
+}
+
+header .subtitle {
+  margin: 0;
+  line-height: var(--line-height);
+  font-weight: var(--font-weight-normal);
+  color: var(--text-color);
+}
+
+header .network-info {
+  margin: calc(var(--line-height) / 2) 0 0 0;
+  line-height: var(--line-height);
+  font-size: 0.9rem;
+  color: var(--text-color-alt);
+  font-weight: var(--font-weight-normal);
+}
+
+/* Section headings with comment-style prefix */
+section h3 {
+  color: var(--text-color-alt);
+  font-weight: var(--font-weight-medium);
+  margin: calc(var(--line-height) * 2) 0 var(--line-height) 0;
+  line-height: var(--line-height);
+}
+
+/* Wallet Section */
+.wallet-section {
+  margin: calc(var(--line-height) * 2) 0;
+}
+
+.wallet-info {
+  margin-top: var(--line-height);
+  padding: var(--line-height) 2ch;
+  background: var(--background-color-alt);
+  border-left: calc(var(--border-thickness) * 2) solid var(--text-color);
+}
+
+.wallet-info p {
+  margin: 0;
+  line-height: var(--line-height);
+}
+
+.wallet-info code {
+  color: var(--text-color);
+  background: transparent;
+}
+
+/* Job Cards */
+.jobs-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(30ch, 1fr));
+  gap: 2ch var(--line-height);
+}
+
+.job-card {
+  border: var(--border-thickness) solid var(--text-color);
+  padding: calc(var(--line-height) - var(--border-thickness)) calc(2ch - var(--border-thickness));
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 0;
+}
+
+.job-card:hover {
+  background: var(--background-color-alt);
+  transform: translateX(1ch);
+}
+
+.job-card.selected {
+  background: var(--background-color-alt);
+  border-left-width: calc(var(--border-thickness) * 3);
+}
+
+.job-card h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  line-height: var(--line-height);
+}
+
+.job-card .price {
+  margin: calc(var(--line-height) / 2) 0 0 0;
+  color: var(--text-color-alt);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Job Form */
+.job-form {
+  margin: calc(var(--line-height) * 2) 0;
+}
+
+.job-form label {
+  display: block;
+  margin-bottom: calc(var(--line-height) / 2);
+  font-weight: var(--font-weight-medium);
+}
+
+.job-form input {
+  width: 100%;
+  padding: calc(var(--line-height) / 2 - var(--border-thickness)) calc(1ch - var(--border-thickness));
+  font-family: var(--font-family);
+  font-size: 1rem;
+  border: var(--border-thickness) solid var(--text-color);
+  background: var(--background-color);
+  color: var(--text-color);
+  line-height: var(--line-height);
+  margin-top: 0;
+}
+
+.job-form input:focus {
+  outline: none;
+  border-color: var(--text-color);
+  background: var(--background-color-alt);
+}
+
+.price-display {
+  margin: var(--line-height) 0;
+  line-height: calc(var(--line-height) * 2);
+}
+
+.price-display code {
+  font-size: 1.2rem;
+  font-weight: var(--font-weight-bold);
+}
+
+/* Payment Section */
+.payment-section {
+  margin: calc(var(--line-height) * 2) 0;
+}
+
+.payment-details pre {
+  background: var(--background-color-alt);
+  padding: var(--line-height) 2ch;
+  border: var(--border-thickness) solid var(--text-color);
+  margin: var(--line-height) 0;
+  line-height: var(--line-height);
+  overflow-x: auto;
+}
+
+.payment-details pre span {
+  font-weight: var(--font-weight-bold);
+}
+
+/* Execution Section */
+.execution-section {
+  margin: calc(var(--line-height) * 2) 0;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 1ch;
+  padding: var(--line-height) 2ch;
+  background: var(--background-color-alt);
+  margin: var(--line-height) 0;
+  line-height: var(--line-height);
+}
+
+.status-dot {
+  width: 1ch;
+  height: 1ch;
+  border-radius: 50%;
+  background: var(--text-color-alt);
+  flex-shrink: 0;
+}
+
+.status-indicator.running .status-dot {
+  background: #f59e0b;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.status-indicator.complete .status-dot {
+  background: #10b981;
+}
+
+.status-indicator.error .status-dot {
+  background: #ef4444;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.output-console {
+  background: var(--background-color-alt);
+  border: var(--border-thickness) solid var(--text-color);
+  padding: var(--line-height) 2ch;
+  min-height: calc(var(--line-height) * 10);
+  max-height: calc(var(--line-height) * 20);
+  overflow-y: auto;
+  margin: var(--line-height) 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: var(--font-family);
+  line-height: var(--line-height);
+}
+
+/* Buttons */
+.btn {
+  display: inline-block;
+  padding: calc(var(--line-height) / 2 - var(--border-thickness)) calc(2ch - var(--border-thickness));
+  font-family: var(--font-family);
+  font-size: 1rem;
+  font-weight: var(--font-weight-medium);
+  border: var(--border-thickness) solid var(--text-color);
+  background: var(--background-color);
+  color: var(--text-color);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  line-height: var(--line-height);
+  margin-top: 0;
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--text-color);
+  color: var(--background-color);
+  transform: translateX(0.5ch);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateX(0);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  /* Use default styles */
+}
+
+.btn-success {
+  border-color: #10b981;
+  color: #10b981;
+}
+
+.btn-success:hover:not(:disabled) {
+  background: #10b981;
+  color: var(--background-color);
+}
+
+.btn-secondary {
+  border-color: var(--text-color-alt);
+  color: var(--text-color-alt);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--text-color-alt);
+  color: var(--background-color);
+}
+
+/* Error Messages */
+.error-message {
+  margin: var(--line-height) 0;
+  padding: var(--line-height) 2ch;
+  background: rgba(239, 68, 68, 0.1);
+  border-left: calc(var(--border-thickness) * 3) solid #ef4444;
+  color: var(--text-color);
+  line-height: var(--line-height);
+}
+
+/* Utility Classes */
+.hidden {
+  display: none !important;
+}
+
+/* Mobile Responsive Adjustments */
+@media screen and (max-width: 768px) {
+  .jobs-list {
+    grid-template-columns: 1fr;
+  }
+
+  header h1 {
+    font-size: 1.2rem;
+  }
+
+  header p {
+    font-size: 0.9rem;
+  }
+}

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>x402 Protocol - Pay-per-Execution</title>
+  <link rel="stylesheet" href="css/asta.css">
+</head>
+<body>
+  <!-- Theme Toggle -->
+  <div class="toggles-container">
+    <label class="theme-toggle-label">
+      <input type="checkbox" class="theme-toggle">
+    </label>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <h1>x402 Protocol</h1>
+    <p class="subtitle">Pay-per-execution API using blockchain payments</p>
+    <p class="network-info">Base Sepolia Testnet · U Token</p>
+  </header>
+
+  <!-- Wallet Connection -->
+  <section class="wallet-section">
+    <h3>// Wallet Connection</h3>
+    <div class="grid">
+      <div class="twelve columns">
+        <button id="connectWallet" class="btn btn-primary">» Connect Wallet</button>
+        <div id="walletInfo" class="wallet-info hidden">
+          <p>
+            <strong>Address:</strong> <code id="walletAddress"></code><br>
+            <strong>Balance:</strong> <code id="walletBalance"></code>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content (Hidden until wallet connected) -->
+  <div id="mainContent" class="hidden">
+
+    <!-- Job Selection -->
+    <section class="job-selector">
+      <h3>// Available Jobs</h3>
+      <div id="jobsList" class="jobs-list grid"></div>
+    </section>
+
+    <!-- Job Configuration Form -->
+    <section id="jobForm" class="job-form hidden">
+      <h3>// Job Parameters</h3>
+      <div class="grid">
+        <div class="eight columns">
+          <label for="hostInput">$ Host to Ping:</label>
+          <input type="text" id="hostInput" placeholder="example.com or 8.8.8.8">
+        </div>
+        <div class="four columns">
+          <label for="countInput">$ Count:</label>
+          <input type="number" id="countInput" value="4" min="1" max="10">
+        </div>
+      </div>
+      <div class="grid">
+        <div class="six columns">
+          <p class="price-display">
+            <strong>Price:</strong> <code id="jobPrice">0.01</code> U
+          </p>
+        </div>
+        <div class="six columns">
+          <button id="requestJob" class="btn btn-primary">» Request Job</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Payment Section -->
+    <section id="paymentSection" class="payment-section hidden">
+      <h3>// 402 Payment Required</h3>
+      <div class="payment-details">
+        <pre>╔═══════════════════════════════════════╗
+║ Amount:     <span id="paymentAmount">0.00</span> U                  ║
+║ Job ID:     <span id="jobId">pending...</span>        ║
+║ Expires in: <span id="expiryTimer">--:--</span>                   ║
+╚═══════════════════════════════════════╝</pre>
+      </div>
+      <div class="grid">
+        <div class="six columns">
+          <button id="payButton" class="btn btn-success">» Pay & Execute</button>
+        </div>
+        <div class="six columns">
+          <button id="cancelButton" class="btn btn-secondary">× Cancel</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Execution Results -->
+    <section id="executionSection" class="execution-section hidden">
+      <h3>// Execution Output</h3>
+      <div id="statusIndicator" class="status-indicator">
+        <span class="status-dot"></span>
+        <span id="statusText">Waiting for payment...</span>
+      </div>
+      <pre id="outputConsole" class="output-console">─────────────────────────────────────────────────────────────────────────────
+</pre>
+    </section>
+
+  </div>
+
+  <!-- Error Messages -->
+  <div id="errorMessage" class="error-message hidden"></div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
