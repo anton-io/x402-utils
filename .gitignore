@@ -1,0 +1,22 @@
+# IDE files.
+.idea
+
+# Ignore system files.
+.DS_Store
+.installed
+
+# Python compiled.
+__pycache__
+*.pyc
+
+# Experiments and data
+_experiments
+data
+
+# Node related.
+node_modules
+package-lock.json
+
+# Ignore AI related files.
+.claude/
+CLAUDE.md
