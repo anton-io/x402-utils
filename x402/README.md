@@ -1,69 +1,127 @@
 # x402 Protocol - Pay-per-Execution PoC
 
-A blockchain-based pay-per-execution service implementing the x402 protocol (inspired by HTTP 402 Payment Required). Users pay with U tokens on Base Sepolia to execute jobs, with results streamed back in real-time.
+A blockchain-based pay-per-execution service implementing the **x402 protocol** (HTTP 402 Payment Required). Users pay with U tokens (or signature-based payment) on Base Sepolia to execute jobs, with results streamed back in real-time.
 
-**Status**: ✅ Production-ready PoC · All tests passing
+**Status**: ✅ Production-ready PoC · All tests passing · Multiple frontends · Python agent
 
-## Overview
+## 🎯 Overview
 
-**Flow**: User requests job → Receives 402 Payment Required → Pays with U token → Job executes → Results stream via SSE
+**Payment Flows**:
+1. **Traditional**: User → 402 Response → ERC20 Transfer → Payment Verified → Job Executes → Results Stream
+2. **x402 Signature**: User → Sign EIP-712 → X-PAYMENT Header → Instant Authorization → Job Executes → Results Stream
 
 ```
-Frontend (Vanilla JS) ←→ Backend (FastAPI) ←→ Base Sepolia Network
-         ↓
-    User Wallet
+┌─────────────────┐     ┌──────────────────┐     ┌────────────────────┐
+│  2 Frontends    │────▶│  FastAPI Backend │────▶│  Base Sepolia      │
+│  + 1 Agent      │◀────│  (x402 Server)   │◀────│  Blockchain        │
+└─────────────────┘     └──────────────────┘     └────────────────────┘
+  • Vanilla JS            • Payment verify        • U Token (ERC20)
+  • React + Privy         • EIP-712 sigs          • Payment tracking
+  • Python Agent          • SSE streaming         • Smart contracts
 ```
 
-## Quick Start
+## 🚀 Quick Start (1 Minute)
 
-### Prerequisites
-- Python 3.9+
-- [MetaMask](https://metamask.io/) or [Coinbase Wallet](https://www.coinbase.com/wallet)
-- Base Sepolia ETH ([faucet](https://www.coinbase.com/faucets/base-ethereum-goerli-faucet))
-- U tokens: `0x82cabCB0F84d088218c22482737e6BB777FA980f`
+### Fastest Way - Use the Start Script
 
-### Setup (5 minutes)
+```bash
+./start.sh
+```
+
+This automatically starts:
+- ✅ **Backend** on http://localhost:8989
+- ✅ **Frontend-JS** on http://localhost:3000 (Vanilla JS + MetaMask)
+- ✅ **Frontend-Privy** on http://localhost:3001 (React + Privy + x402)
+
+### Manual Setup
 
 1. **Configure backend:**
    ```bash
    cd backend
    cp .env.example .env
-   # Edit .env and add: RECIPIENT_ADDRESS=0xYourWalletAddress
+   # Edit .env: RECIPIENT_ADDRESS=0xYourWalletAddress
    ```
 
-2. **Run servers:**
+2. **Run backend:**
    ```bash
-   # Terminal 1 - Backend
    cd backend
    python -m venv venv
    source venv/bin/activate  # Windows: venv\Scripts\activate
    pip install -r requirements.txt
-   python main.py  # Runs on port 8990
-
-   # Terminal 2 - Frontend
-   cd frontend
-   python -m http.server 3000
+   python main.py
    ```
 
-3. **Use the app:**
-   - Open http://localhost:3000
-   - Connect wallet (auto-switches to Base Sepolia)
-   - Select ping job → Enter host → Request → Pay → Execute
-   - Watch real-time results stream
+3. **Choose your frontend:**
 
-## Architecture
+   **Option A: Vanilla JS (MetaMask/Coinbase Wallet)**
+   ```bash
+   cd frontend-js
+   python -m http.server 3000
+   # Visit: http://localhost:3000
+   ```
+
+   **Option B: React + Privy (Recommended - Full x402)**
+   ```bash
+   cd frontend-privy
+   npm install
+   npm run dev
+   # Visit: http://localhost:3001
+   ```
+
+4. **Or run the Python agent:**
+   ```bash
+   cd agent
+   pip install -r requirements.txt
+   python x402_agent.py  # Pings google.com every 3 minutes
+   ```
+
+## 📊 Frontend Comparison
+
+| Feature | Frontend-JS (3000) | Frontend-Privy (3001) ⭐ | Agent |
+|---------|-------------------|----------------------|-------|
+| **Tech** | Vanilla JS | React + Privy | Python |
+| **Wallet** | MetaMask/Coinbase | Privy Embedded | Generated |
+| **Payment** | ERC20 Transfer | x402 + Traditional | x402 Signature |
+| **Auto-Approve** | ❌ No | ✅ Yes (Delegation) | N/A |
+| **x402 Protocol** | ❌ No | ✅ Full Support | ✅ Yes |
+| **Best For** | Testing basics | Production use | Automation |
+| **Setup** | None | `npm install` | `pip install` |
+
+**Recommendation**: Use **Frontend-Privy (3001)** for full x402 features and best UX.
+
+## 🏗️ Architecture
 
 ### Backend (FastAPI)
+- **Dual payment support**: Traditional ERC20 transfers + x402 signature-based
+- **EIP-712 verification**: Validates signed payment authorizations
 - **Extensible job system**: Plugin-based registry for easy job type additions
 - **Payment verification**: Monitors Base Sepolia for ERC20 Transfer events
 - **Real-time streaming**: Server-Sent Events (SSE) for live output
 - **Timeout management**: 5-minute configurable payment windows
 
-### Frontend (Vanilla JS)
-- **Web3 integration**: MetaMask/Coinbase Wallet support
-- **Network switching**: Auto-adds Base Sepolia to wallet
-- **SSE client**: Real-time job output streaming
-- **Monospace UI**: Built with Asta framework
+### Frontend Options
+
+**1. Frontend-JS (Port 3000)**
+- Vanilla JavaScript with Web3.js
+- MetaMask/Coinbase Wallet integration
+- Traditional ERC20 payment flow
+- Asta framework monospace UI
+- No build process required
+
+**2. Frontend-Privy (Port 3001)** ⭐ **Recommended**
+- React + TypeScript with Vite
+- Privy embedded wallet support
+- Full x402 signature-based payment
+- Delegated actions for auto-approve
+- Dual payment method (x402 + traditional)
+- Best developer experience
+
+**3. Python Agent**
+- Autonomous x402 client
+- Periodic job execution
+- EIP-712 signature creation
+- No blockchain transaction needed
+- Perfect for automation/monitoring
 
 ### Configuration
 - **Network**: Base Sepolia (Chain ID: 84532)

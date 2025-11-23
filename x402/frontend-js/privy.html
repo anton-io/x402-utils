@@ -28,10 +28,10 @@
       <p>Privy's x402 implementation enables automatic stablecoin payments for APIs using <strong>signed USDC transfers</strong> with no gas fees.</p>
       <p><strong>Key Features:</strong></p>
       <ul style="margin-left: 2ch; margin-top: calc(var(--line-height) / 2);">
-        <li>• EIP-712 signed USDC transfers (no gas required)</li>
-        <li>• Facilitators submit transactions and cover gas fees</li>
-        <li>• Embedded wallet integration with Privy SDK</li>
-        <li>• Works on Base, Base Sepolia, and Solana</li>
+        <li>EIP-712 signed USDC transfers (no gas required)</li>
+        <li>Facilitators submit transactions and cover gas fees</li>
+        <li>Embedded wallet integration with Privy SDK</li>
+        <li>Works on Base, Base Sepolia, and Solana</li>
       </ul>
     </div>
   </section>
@@ -82,13 +82,13 @@ function PremiumContent() {
     <h3>// Payment Flow</h3>
     <div class="faucet-info">
       <ol style="margin-left: 2ch; margin-top: calc(var(--line-height) / 2);">
-        <li>1. Client requests content via <code>fetchWithPayment()</code></li>
-        <li>2. Server responds with <code>402 Payment Required</code></li>
-        <li>3. Hook creates EIP-712 typed data for USDC transfer</li>
-        <li>4. User signs authorization (no gas)</li>
-        <li>5. Hook sends request with <code>X-PAYMENT</code> header</li>
-        <li>6. Facilitator submits transaction onchain</li>
-        <li>7. Server verifies payment and returns content</li>
+        <li>Client requests content via <code>fetchWithPayment()</code></li>
+        <li>Server responds with <code>402 Payment Required</code></li>
+        <li>Hook creates EIP-712 typed data for USDC transfer</li>
+        <li>User signs authorization (no gas)</li>
+        <li>Hook sends request with <code>X-PAYMENT</code> header</li>
+        <li>Facilitator submits transaction onchain</li>
+        <li>Server verifies payment and returns content</li>
       </ol>
     </div>
   </section>
@@ -99,11 +99,11 @@ function PremiumContent() {
     <p>To support Privy x402, the backend needs to:</p>
     <div class="faucet-info">
       <ol style="margin-left: 2ch; margin-top: calc(var(--line-height) / 2);">
-        <li>1. <strong>Parse X-PAYMENT header:</strong> Extract base64-encoded payment data</li>
-        <li>2. <strong>Verify EIP-712 signature:</strong> Validate signed USDC authorization</li>
-        <li>3. <strong>Submit to facilitator:</strong> Send to Pay AI or Corbits endpoint</li>
-        <li>4. <strong>Wait for confirmation:</strong> Verify onchain settlement</li>
-        <li>5. <strong>Return content:</strong> Respond with 200 OK</li>
+        <li><strong>Parse X-PAYMENT header:</strong> Extract base64-encoded payment data</li>
+        <li><strong>Verify EIP-712 signature:</strong> Validate signed USDC authorization</li>
+        <li><strong>Submit to facilitator:</strong> Send to Pay AI or Corbits endpoint</li>
+        <li><strong>Wait for confirmation:</strong> Verify onchain settlement</li>
+        <li><strong>Return content:</strong> Respond with 200 OK</li>
       </ol>
     </div>
   </section>
@@ -114,22 +114,22 @@ function PremiumContent() {
     <div class="faucet-info">
       <p><strong>Official Documentation:</strong></p>
       <ul style="margin-left: 2ch; margin-top: calc(var(--line-height) / 2);">
-        <li>• <a href="https://docs.privy.io/recipes/x402" target="_blank">Privy x402 Recipe</a></li>
-        <li>• <a href="https://docs.privy.io" target="_blank">Privy Documentation</a></li>
-        <li>• <a href="https://eips.ethereum.org/EIPS/eip-3009" target="_blank">EIP-3009: Transfer With Authorization</a></li>
+        <li><a href="https://docs.privy.io/recipes/x402" target="_blank">Privy x402 Recipe</a></li>
+        <li><a href="https://docs.privy.io" target="_blank">Privy Documentation</a></li>
+        <li><a href="https://eips.ethereum.org/EIPS/eip-3009" target="_blank">EIP-3009: Transfer With Authorization</a></li>
       </ul>
 
       <p style="margin-top: var(--line-height);"><strong>Facilitators:</strong></p>
       <ul style="margin-left: 2ch; margin-top: calc(var(--line-height) / 2);">
-        <li>• Pay AI - Facilitator service with technical docs</li>
-        <li>• Corbits - Alternative facilitator provider</li>
+        <li>Pay AI - Facilitator service with technical docs</li>
+        <li>Corbits - Alternative facilitator provider</li>
       </ul>
 
       <p style="margin-top: var(--line-height);"><strong>Testing:</strong></p>
       <ul style="margin-left: 2ch; margin-top: calc(var(--line-height) / 2);">
-        <li>• Get testnet USDC from Circle's faucet</li>
-        <li>• Use Base Sepolia for testing</li>
-        <li>• Fund wallets with <code>useFundWallet</code> hook</li>
+        <li>Get testnet USDC from Circle's faucet</li>
+        <li>Use Base Sepolia for testing</li>
+        <li>Fund wallets with <code>useFundWallet</code> hook</li>
       </ul>
     </div>
   </section>
