@@ -1,4 +1,4 @@
-# x402 Protocol - Pay-per-Execution PoC
+# x402 Utils - Pay-per-Execution with X-Chain Token
 
 A blockchain-based pay-per-execution service implementing the **x402 protocol** (HTTP 402 Payment Required). Users pay with U tokens (or signature-based payment) on Base Sepolia to execute jobs, with results streamed back in real-time.
 
@@ -29,7 +29,7 @@ This project showcases the integration of three powerful blockchain infrastructu
 ## 📸 See It In Action
 
 <p align="center">
-  <img src="x402-ping.jpg" alt="x402 Protocol Web Interface - Ping Job Execution" width="800">
+  <img src="x402-ping.png" alt="x402 Protocol Web Interface - Ping Job Execution" width="800">
   <br>
   <em>x402 web interface executing a ping job with real-time streaming results</em>
 </p>
