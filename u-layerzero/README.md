@@ -6,16 +6,22 @@ A LayerZero V2 Omnichain Fungible Token (OFT) implementation deployed on Sepolia
 
 We've created and deployed a cross-chain fungible token called "U Token" (symbol: U) that can be transferred between Sepolia and Base Sepolia testnets using LayerZero's V2 protocol. The token is fully ERC20-compatible and can move across chains in ~5-10 minutes.
 
-## Deployed Contracts
+## Deployed & Verified Contracts
 
-| Network | Contract Address | Explorer |
-|---------|-----------------|----------|
-| **Sepolia** | `0x8cd8999C4927d79A11cAa6009177887Bc4B1344e` | [View on Etherscan](https://sepolia.etherscan.io/address/0x8cd8999C4927d79A11cAa6009177887Bc4B1344e) |
-| **Base Sepolia** | `0x82cabCB0F84d088218c22482737e6BB777FA980f` | [View on Basescan](https://sepolia.basescan.org/address/0x82cabCB0F84d088218c22482737e6BB777FA980f) |
+| Network | Contract Address | Explorer                                                                                                                      |
+|---------|-----------------|-------------------------------------------------------------------------------------------------------------------------------|
+| **Sepolia** | `0x3edEa36d049fFeF9Ac3fC3646227ca81C9A87118` | [View on Blockscout](https://eth-sepolia.blockscout.com/address/0x3edEa36d049fFeF9Ac3fC3646227ca81C9A87118?tab=contract_code) |
+| **Base Sepolia** | `0x7143401013282067926d25e316f055fF3bc6c3FD` | [View on Blockscout](https://base-sepolia.blockscout.com/address/0x7143401013282067926d25e316f055fF3bc6c3FD?tab=contract)     |
 
 **Owner Address:** `0xE20cAdBF59f7774e1F60fe6d2533A5386740B2dB`
 
 **LayerZero Endpoint (both networks):** `0x6EDCE65403992e310A62460808c4b910D972f10f`
+
+## Testnet Faucet
+
+There is a faucet to claim test U Token on Base Sepolia at: [0x63b7eF0778143E23f7320ab5bB77344aE66e7a57](https://base-sepolia.blockscout.com/address/0x63b7eF0778143E23f7320ab5bB77344aE66e7a57?tab=contract). 
+
+This contract has also been verified and funds have been added. There is a limit of 1 U token per day per address.
 
 ## What You Can Do
 
@@ -103,7 +109,7 @@ The U token is a standard ERC20 token, so you can interact with it like any othe
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract MyContract {
-    IERC20 public uToken = IERC20(0x8cd8999C4927d79A11cAa6009177887Bc4B1344e); // Sepolia
+    IERC20 public uToken = IERC20(0x3edEa36d049fFeF9Ac3fC3646227ca81C9A87118); // Sepolia
 
     function deposit(uint256 amount) external {
         uToken.transferFrom(msg.sender, address(this), amount);
@@ -123,7 +129,7 @@ contract MyContract {
 import { ethers } from "ethers";
 
 // Connect to deployed contract
-const uTokenAddress = "0x8cd8999C4927d79A11cAa6009177887Bc4B1344e"; // Sepolia
+const uTokenAddress = "0x3edEa36d049fFeF9Ac3fC3646227ca81C9A87118"; // Sepolia
 const uTokenABI = [
   "function balanceOf(address) view returns (uint256)",
   "function transfer(address to, uint256 amount) returns (bool)",
@@ -147,7 +153,7 @@ await uToken.mint(userAddress, ethers.utils.parseEther("100"));
 
 ```typescript
 const U = await ethers.getContractFactory("U");
-const uToken = U.attach("0x8cd8999C4927d79A11cAa6009177887Bc4B1344e");
+const uToken = U.attach("0x3edEa36d049fFeF9Ac3fC3646227ca81C9A87118");
 
 // Use the token
 await uToken.balanceOf(address);
@@ -220,8 +226,8 @@ Required in `.env`:
 PRIVATE_KEY=your_private_key
 SEPOLIA_RPC_URL=https://ethereum-sepolia-rpc.publicnode.com
 BASE_SEPOLIA_RPC_URL=https://base-sepolia-rpc.publicnode.com
-SEPOLIA_OFT_ADDRESS=0x8cd8999C4927d79A11cAa6009177887Bc4B1344e
-BASE_SEPOLIA_OFT_ADDRESS=0x82cabCB0F84d088218c22482737e6BB777FA980f
+SEPOLIA_OFT_ADDRESS=0x3edEa36d049fFeF9Ac3fC3646227ca81C9A87118
+BASE_SEPOLIA_OFT_ADDRESS=0x7143401013282067926d25e316f055fF3bc6c3FD
 ```
 
 ### Network Configuration

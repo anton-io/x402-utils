@@ -37,6 +37,19 @@
     </div>
   </section>
 
+  <!-- Faucet Section -->
+  <section id="faucetSection" class="faucet-section hidden">
+    <h3>// U Token Faucet</h3>
+    <div class="faucet-info">
+      <p><strong>Faucet Balance:</strong> <code id="faucetBalance">--</code> U</p>
+      <p><strong>Claim Amount:</strong> <code>1.0</code> U</p>
+      <p><strong>Cooldown:</strong> <code>24 hours</code></p>
+      <p id="cooldownStatus"><strong>Next Claim:</strong> <code id="nextClaimTime">--</code></p>
+    </div>
+    <button id="claimTokens" class="btn btn-primary">» Claim Tokens</button>
+    <p class="faucet-note">Get free U tokens to try the x402 protocol</p>
+  </section>
+
   <!-- Main Content (Hidden until wallet connected) -->
   <div id="mainContent" class="hidden">
 
@@ -75,11 +88,10 @@
     <section id="paymentSection" class="payment-section hidden">
       <h3>// 402 Payment Required</h3>
       <div class="payment-details">
-        <pre>╔═══════════════════════════════════════╗
-║ Amount:     <span id="paymentAmount">0.00</span> U                  ║
-║ Job ID:     <span id="jobId">pending...</span>        ║
-║ Expires in: <span id="expiryTimer">--:--</span>                   ║
-╚═══════════════════════════════════════╝</pre>
+        <p><strong>Amount:</strong> <code id="paymentAmount">0.00</code> U</p>
+        <p><strong>Job ID:</strong> <code id="jobId">pending...</code></p>
+        <p><strong>Expires in:</strong> <code id="expiryTimer">--:--</code></p>
+        <p id="txLinkContainer" class="hidden"><strong>Transaction:</strong> <a id="txLink" href="#" target="_blank" rel="noopener noreferrer"></a></p>
       </div>
       <div class="grid">
         <div class="six columns">
@@ -98,8 +110,7 @@
         <span class="status-dot"></span>
         <span id="statusText">Waiting for payment...</span>
       </div>
-      <pre id="outputConsole" class="output-console">─────────────────────────────────────────────────────────────────────────────
-</pre>
+      <pre id="outputConsole" class="output-console"></pre>
     </section>
 
   </div>

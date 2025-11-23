@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>x402 Protocol - Privy Integration</title>
+  <link rel="stylesheet" href="css/asta.css">
+</head>
+<body>
+  <!-- Theme Toggle -->
+  <div class="toggles-container">
+    <label class="theme-toggle-label">
+      <input type="checkbox" class="theme-toggle">
+    </label>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <h1>x402 + Privy Integration</h1>
+    <p class="subtitle">Gasless USDC payments with Privy embedded wallets</p>
+    <p class="network-info">Base Sepolia · USDC · No gas fees</p>
+  </header>
+
+  <!-- Info Section -->
+  <section>
+    <h3>// What is Privy x402?</h3>
+    <div class="faucet-info">
+      <p>Privy's x402 implementation enables automatic stablecoin payments for APIs using <strong>signed USDC transfers</strong> with no gas fees.</p>
+      <p><strong>Key Features:</strong></p>
+      <ul style="margin-left: 2ch; margin-top: calc(var(--line-height) / 2);">
+        <li>• EIP-712 signed USDC transfers (no gas required)</li>
+        <li>• Facilitators submit transactions and cover gas fees</li>
+        <li>• Embedded wallet integration with Privy SDK</li>
+        <li>• Works on Base, Base Sepolia, and Solana</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Implementation Guide -->
+  <section>
+    <h3>// React Implementation</h3>
+    <p>Privy x402 requires a React application with the Privy SDK. Here's how to implement it:</p>
+
+    <h4 style="margin-top: calc(var(--line-height) * 2);">1. Install Dependencies</h4>
+    <pre style="background: var(--background-color-alt); padding: var(--line-height) 2ch; margin-top: var(--line-height);">npm install @privy-io/react-auth</pre>
+
+    <h4 style="margin-top: calc(var(--line-height) * 2);">2. Setup Privy Provider</h4>
+    <pre style="background: var(--background-color-alt); padding: var(--line-height) 2ch; margin-top: var(--line-height); overflow-x: auto;">import { PrivyProvider } from '@privy-io/react-auth';
+
+function App() {
+  return (
+    &lt;PrivyProvider appId="your-privy-app-id"&gt;
+      &lt;YourApp /&gt;
+    &lt;/PrivyProvider&gt;
+  );
+}</pre>
+
+    <h4 style="margin-top: calc(var(--line-height) * 2);">3. Use x402 Hook</h4>
+    <pre style="background: var(--background-color-alt); padding: var(--line-height) 2ch; margin-top: var(--line-height); overflow-x: auto;">import { useX402Fetch, useWallets } from '@privy-io/react-auth';
+
+function PremiumContent() {
+  const { wallets } = useWallets();
+  const { wrapFetchWithPayment } = useX402Fetch();
+
+  async function fetchPaidContent() {
+    const fetchWithPayment = wrapFetchWithPayment({
+      walletAddress: wallets[0]?.address,
+      fetch,
+      maxValue: BigInt(1000000) // 1 USDC max
+    });
+
+    const response = await fetchWithPayment('http://localhost:8989/api/jobs/request');
+    return await response.json();
+  }
+
+  return &lt;button onClick={fetchPaidContent}&gt;Get Paid Content&lt;/button&gt;;
+}</pre>
+  </section>
+
+  <!-- Payment Flow -->
+  <section>
+    <h3>// Payment Flow</h3>
+    <div class="faucet-info">
+      <ol style="margin-left: 2ch; margin-top: calc(var(--line-height) / 2);">
+        <li>1. Client requests content via <code>fetchWithPayment()</code></li>
+        <li>2. Server responds with <code>402 Payment Required</code></li>
+        <li>3. Hook creates EIP-712 typed data for USDC transfer</li>
+        <li>4. User signs authorization (no gas)</li>
+        <li>5. Hook sends request with <code>X-PAYMENT</code> header</li>
+        <li>6. Facilitator submits transaction onchain</li>
+        <li>7. Server verifies payment and returns content</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Backend Adaptation -->
+  <section>
+    <h3>// Backend Adaptation Needed</h3>
+    <p>To support Privy x402, the backend needs to:</p>
+    <div class="faucet-info">
+      <ol style="margin-left: 2ch; margin-top: calc(var(--line-height) / 2);">
+        <li>1. <strong>Parse X-PAYMENT header:</strong> Extract base64-encoded payment data</li>
+        <li>2. <strong>Verify EIP-712 signature:</strong> Validate signed USDC authorization</li>
+        <li>3. <strong>Submit to facilitator:</strong> Send to Pay AI or Corbits endpoint</li>
+        <li>4. <strong>Wait for confirmation:</strong> Verify onchain settlement</li>
+        <li>5. <strong>Return content:</strong> Respond with 200 OK</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Resources -->
+  <section>
+    <h3>// Resources & Documentation</h3>
+    <div class="faucet-info">
+      <p><strong>Official Documentation:</strong></p>
+      <ul style="margin-left: 2ch; margin-top: calc(var(--line-height) / 2);">
+        <li>• <a href="https://docs.privy.io/recipes/x402" target="_blank">Privy x402 Recipe</a></li>
+        <li>• <a href="https://docs.privy.io" target="_blank">Privy Documentation</a></li>
+        <li>• <a href="https://eips.ethereum.org/EIPS/eip-3009" target="_blank">EIP-3009: Transfer With Authorization</a></li>
+      </ul>
+
+      <p style="margin-top: var(--line-height);"><strong>Facilitators:</strong></p>
+      <ul style="margin-left: 2ch; margin-top: calc(var(--line-height) / 2);">
+        <li>• Pay AI - Facilitator service with technical docs</li>
+        <li>• Corbits - Alternative facilitator provider</li>
+      </ul>
+
+      <p style="margin-top: var(--line-height);"><strong>Testing:</strong></p>
+      <ul style="margin-left: 2ch; margin-top: calc(var(--line-height) / 2);">
+        <li>• Get testnet USDC from Circle's faucet</li>
+        <li>• Use Base Sepolia for testing</li>
+        <li>• Fund wallets with <code>useFundWallet</code> hook</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Comparison -->
+  <section>
+    <h3>// Comparison: Current vs Privy Implementation</h3>
+    <table style="width: 100%; margin-top: var(--line-height);">
+      <thead>
+        <tr>
+          <th style="text-align: left; padding: calc(var(--line-height) / 2) 1ch; border-bottom: var(--border-thickness) solid var(--text-color);">Feature</th>
+          <th style="text-align: left; padding: calc(var(--line-height) / 2) 1ch; border-bottom: var(--border-thickness) solid var(--text-color);">Current (index.html)</th>
+          <th style="text-align: left; padding: calc(var(--line-height) / 2) 1ch; border-bottom: var(--border-thickness) solid var(--text-color);">Privy x402</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding: calc(var(--line-height) / 2) 1ch;">Payment Token</td>
+          <td style="padding: calc(var(--line-height) / 2) 1ch;">U Token (ERC20)</td>
+          <td style="padding: calc(var(--line-height) / 2) 1ch;">USDC</td>
+        </tr>
+        <tr>
+          <td style="padding: calc(var(--line-height) / 2) 1ch;">Gas Fees</td>
+          <td style="padding: calc(var(--line-height) / 2) 1ch;">User pays gas</td>
+          <td style="padding: calc(var(--line-height) / 2) 1ch;">Facilitator pays gas</td>
+        </tr>
+        <tr>
+          <td style="padding: calc(var(--line-height) / 2) 1ch;">Wallet</td>
+          <td style="padding: calc(var(--line-height) / 2) 1ch;">MetaMask/Coinbase</td>
+          <td style="padding: calc(var(--line-height) / 2) 1ch;">Privy Embedded Wallet</td>
+        </tr>
+        <tr>
+          <td style="padding: calc(var(--line-height) / 2) 1ch;">Transaction</td>
+          <td style="padding: calc(var(--line-height) / 2) 1ch;">Direct transfer</td>
+          <td style="padding: calc(var(--line-height) / 2) 1ch;">Signed authorization</td>
+        </tr>
+        <tr>
+          <td style="padding: calc(var(--line-height) / 2) 1ch;">Framework</td>
+          <td style="padding: calc(var(--line-height) / 2) 1ch;">Vanilla JS</td>
+          <td style="padding: calc(var(--line-height) / 2) 1ch;">React + Privy SDK</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Navigation -->
+  <section style="margin-top: calc(var(--line-height) * 3); padding-top: calc(var(--line-height) * 2); border-top: var(--border-thickness) solid var(--text-color-alt);">
+    <div class="grid">
+      <div class="six columns">
+        <a href="index.html" style="display: inline-block; padding: calc(var(--line-height) / 2) 2ch; border: var(--border-thickness) solid var(--text-color); text-decoration: none;">« Back to Main Demo</a>
+      </div>
+    </div>
+  </section>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

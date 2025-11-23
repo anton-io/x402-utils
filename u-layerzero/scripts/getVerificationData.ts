@@ -35,11 +35,11 @@ async function main() {
   console.log("- EVM Version: default");
 
   console.log("\n## Contract Addresses:");
-  console.log("- Sepolia: 0x8cd8999C4927d79A11cAa6009177887Bc4B1344e");
-  console.log("  Verify at: https://sepolia.etherscan.io/address/0x8cd8999C4927d79A11cAa6009177887Bc4B1344e#code");
+  console.log("- Sepolia: 0x3edEa36d049fFeF9Ac3fC3646227ca81C9A87118");
+  console.log("  Verify at: https://sepolia.etherscan.io/address/0x3edEa36d049fFeF9Ac3fC3646227ca81C9A87118#code");
 
-  console.log("\n- Base Sepolia: 0x82cabCB0F84d088218c22482737e6BB777FA980f");
-  console.log("  Verify at: https://sepolia.basescan.org/address/0x82cabCB0F84d088218c22482737e6BB777FA980f#code");
+  console.log("\n- Base Sepolia: 0x7143401013282067926d25e316f055fF3bc6c3FD");
+  console.log("  Verify at: https://sepolia.basescan.org/address/0x7143401013282067926d25e316f055fF3bc6c3FD#code");
 
   console.log("\n## To flatten the contract:");
   console.log("npx hardhat flatten contracts/U.sol > U_flattened.sol");

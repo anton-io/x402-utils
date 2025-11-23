@@ -228,6 +228,34 @@ const CHAIN_ID = '0x14a34'; // 84532 in hex (Base Sepolia)
 const CHAIN_NAME = 'Base Sepolia';
 const RPC_URL = 'https://base-sepolia-rpc.publicnode.com';
 
+// Faucet contract address
+const FAUCET_ADDRESS = '0x63b7eF0778143E23f7320ab5bB77344aE66e7a57';
+
+// Faucet ABI (only functions we need)
+const FAUCET_ABI = [
+    {
+        "inputs": [],
+        "name": "withdraw",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [{"name": "user", "type": "address"}],
+        "name": "timeLeft",
+        "outputs": [{"name": "", "type": "uint256"}],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "faucetBalance",
+        "outputs": [{"name": "", "type": "uint256"}],
+        "stateMutability": "view",
+        "type": "function"
+    }
+];
+
 // ERC20 ABI for transfer function
 const ERC20_ABI = [
     {
@@ -266,6 +294,11 @@ const elements = {
     walletInfo: document.getElementById('walletInfo'),
     walletAddress: document.getElementById('walletAddress'),
     walletBalance: document.getElementById('walletBalance'),
+    faucetSection: document.getElementById('faucetSection'),
+    faucetBalance: document.getElementById('faucetBalance'),
+    nextClaimTime: document.getElementById('nextClaimTime'),
+    claimTokens: document.getElementById('claimTokens'),
+    cooldownStatus: document.getElementById('cooldownStatus'),
     mainContent: document.getElementById('mainContent'),
     jobsList: document.getElementById('jobsList'),
     jobForm: document.getElementById('jobForm'),
@@ -277,6 +310,8 @@ const elements = {
     paymentAmount: document.getElementById('paymentAmount'),
     jobId: document.getElementById('jobId'),
     expiryTimer: document.getElementById('expiryTimer'),
+    txLinkContainer: document.getElementById('txLinkContainer'),
+    txLink: document.getElementById('txLink'),
     payButton: document.getElementById('payButton'),
     cancelButton: document.getElementById('cancelButton'),
     executionSection: document.getElementById('executionSection'),
@@ -294,6 +329,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function initX402() {
     elements.connectWallet.addEventListener('click', connectWallet);
+    elements.claimTokens.addEventListener('click', claimFaucetTokens);
     elements.requestJob.addEventListener('click', requestJobExecution);
     elements.payButton.addEventListener('click', payForJob);
     elements.cancelButton.addEventListener('click', cancelJob);
@@ -331,6 +367,7 @@ async function connectWallet() {
         elements.connectWallet.classList.add('hidden');
         elements.walletInfo.classList.remove('hidden');
         elements.walletAddress.textContent = `${state.wallet.substring(0, 6)}...${state.wallet.substring(38)}`;
+        elements.faucetSection.classList.remove('hidden');
         elements.mainContent.classList.remove('hidden');
 
         // Load jobs
@@ -338,6 +375,9 @@ async function connectWallet() {
 
         // Update balance
         await updateBalance();
+
+        // Load faucet status
+        await updateFaucetStatus();
 
         // Listen for account changes
         window.ethereum.on('accountsChanged', handleAccountsChanged);
@@ -480,13 +520,8 @@ async function requestJobExecution() {
 }
 
 function showPaymentSection(data) {
-    // Format amount with padding
-    const amount = data.payment.amount.padEnd(4, ' ');
-    elements.paymentAmount.textContent = amount;
-
-    // Format job ID (truncate if too long)
-    const jobId = state.currentJobId.substring(0, 24);
-    elements.jobId.textContent = jobId.padEnd(24, ' ');
+    elements.paymentAmount.textContent = data.payment.amount;
+    elements.jobId.textContent = state.currentJobId;
 
     elements.jobForm.classList.add('hidden');
     elements.paymentSection.classList.remove('hidden');
@@ -502,15 +537,14 @@ function startExpiryTimer() {
 
         if (remaining === 0) {
             clearInterval(timer);
-            elements.expiryTimer.textContent = 'EXPIRED'.padEnd(5, ' ');
+            elements.expiryTimer.textContent = 'EXPIRED';
             elements.payButton.disabled = true;
             return;
         }
 
         const minutes = Math.floor(remaining / 60000);
         const seconds = Math.floor((remaining % 60000) / 1000);
-        const timeStr = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-        elements.expiryTimer.textContent = timeStr.padEnd(5, ' ');
+        elements.expiryTimer.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
     }, 1000);
 }
 
@@ -541,7 +575,15 @@ async function payForJob() {
         });
 
         updateStatus('Payment sent! Waiting for confirmation...');
-        appendOutput(`Transaction hash: ${txHash}\n`);
+
+        // Show transaction link with truncated hash
+        const explorerUrl = `https://base-sepolia.blockscout.com/tx/${txHash}`;
+        const truncatedHash = `${txHash.substring(0, 10)}...${txHash.substring(txHash.length - 8)}`;
+        elements.txLink.href = explorerUrl;
+        elements.txLink.textContent = truncatedHash;
+        elements.txLink.title = txHash; // Full hash on hover
+        elements.txLinkContainer.classList.remove('hidden');
+        appendOutput(`Transaction: ${explorerUrl}\n`);
 
         // Wait for transaction confirmation
         await waitForTransaction(txHash);
@@ -695,6 +737,7 @@ function cancelJob() {
     state.currentJobId = null;
     elements.paymentSection.classList.add('hidden');
     elements.executionSection.classList.add('hidden');
+    elements.txLinkContainer.classList.add('hidden');
     elements.jobForm.classList.remove('hidden');
 }
 
@@ -739,4 +782,144 @@ function showError(message) {
     setTimeout(() => {
         elements.errorMessage.classList.add('hidden');
     }, 5000);
+}
+
+// ============================================================================
+// FAUCET FUNCTIONS
+// ============================================================================
+
+async function updateFaucetStatus() {
+    try {
+        // Get faucet balance
+        const balanceData = encodeFunctionCall('faucetBalance()', []);
+        console.log('Calling faucet balance with data:', balanceData);
+        console.log('Faucet address:', FAUCET_ADDRESS);
+
+        const balanceResult = await window.ethereum.request({
+            method: 'eth_call',
+            params: [{
+                to: FAUCET_ADDRESS,
+                data: balanceData
+            }, 'latest']
+        });
+
+        console.log('Faucet balance result:', balanceResult);
+        const balance = parseInt(balanceResult, 16) / 1e18;
+        console.log('Parsed balance:', balance);
+        elements.faucetBalance.textContent = balance.toFixed(2);
+
+        // Get time left for current user
+        const timeLeftData = encodeFunctionCall('timeLeft(address)', [state.wallet]);
+        const timeLeftResult = await window.ethereum.request({
+            method: 'eth_call',
+            params: [{
+                to: FAUCET_ADDRESS,
+                data: timeLeftData
+            }, 'latest']
+        });
+        const timeLeft = parseInt(timeLeftResult, 16);
+
+        if (timeLeft > 0) {
+            // Convert seconds to readable format
+            const hours = Math.floor(timeLeft / 3600);
+            const minutes = Math.floor((timeLeft % 3600) / 60);
+            const seconds = timeLeft % 60;
+
+            let timeStr = '';
+            if (hours > 0) timeStr += `${hours}h `;
+            if (minutes > 0) timeStr += `${minutes}m `;
+            if (seconds > 0 || timeStr === '') timeStr += `${seconds}s`;
+
+            elements.nextClaimTime.textContent = timeStr.trim();
+            elements.claimTokens.disabled = true;
+            elements.cooldownStatus.style.display = 'block';
+        } else {
+            elements.nextClaimTime.textContent = 'Ready!';
+            elements.claimTokens.disabled = false;
+            elements.cooldownStatus.style.display = 'block';
+        }
+    } catch (error) {
+        console.error('Failed to update faucet status:', error);
+    }
+}
+
+async function claimFaucetTokens() {
+    try {
+        elements.claimTokens.disabled = true;
+        elements.claimTokens.textContent = 'Claiming...';
+
+        // Encode withdraw() function call
+        const withdrawData = '0x3ccfd60b'; // Function signature for withdraw()
+
+        // Send transaction
+        const txHash = await window.ethereum.request({
+            method: 'eth_sendTransaction',
+            params: [{
+                from: state.wallet,
+                to: FAUCET_ADDRESS,
+                data: withdrawData,
+                gas: '0x186A0' // 100000 gas
+            }]
+        });
+
+        // Wait for confirmation
+        await waitForFaucetTransaction(txHash);
+
+        // Update UI
+        await updateBalance();
+        await updateFaucetStatus();
+
+        elements.claimTokens.textContent = '✓ Claimed!';
+        setTimeout(() => {
+            elements.claimTokens.textContent = '» Claim Tokens';
+        }, 3000);
+
+    } catch (error) {
+        showError(`Claim failed: ${error.message}`);
+        elements.claimTokens.disabled = false;
+        elements.claimTokens.textContent = '» Claim Tokens';
+    }
+}
+
+async function waitForFaucetTransaction(txHash) {
+    return new Promise((resolve, reject) => {
+        const checkInterval = setInterval(async () => {
+            try {
+                const receipt = await window.ethereum.request({
+                    method: 'eth_getTransactionReceipt',
+                    params: [txHash]
+                });
+
+                if (receipt) {
+                    clearInterval(checkInterval);
+                    if (receipt.status === '0x1') {
+                        resolve(receipt);
+                    } else {
+                        reject(new Error('Transaction failed'));
+                    }
+                }
+            } catch (error) {
+                clearInterval(checkInterval);
+                reject(error);
+            }
+        }, 2000);
+
+        setTimeout(() => {
+            clearInterval(checkInterval);
+            reject(new Error('Transaction confirmation timeout'));
+        }, 120000); // 2 minutes
+    });
+}
+
+function encodeFunctionCall(signature, params) {
+    // Simple encoder for view functions
+    if (signature === 'faucetBalance()') {
+        return '0x1720f5d2'; // faucetBalance() function signature
+    } else if (signature === 'timeLeft(address)') {
+        // timeLeft(address) function signature + padded address
+        const functionSig = '0x405c649c';
+        const paddedAddress = params[0].substring(2).padStart(64, '0');
+        return functionSig + paddedAddress;
+    }
+    return '0x';
 }

@@ -38,7 +38,7 @@ Frontend (Vanilla JS) ←→ Backend (FastAPI) ←→ Base Sepolia Network
    python -m venv venv
    source venv/bin/activate  # Windows: venv\Scripts\activate
    pip install -r requirements.txt
-   python main.py  # Runs on port 8989
+   python main.py  # Runs on port 8990
 
    # Terminal 2 - Frontend
    cd frontend
@@ -136,25 +136,12 @@ class JobRegistry:
 
 **Environment**: Linux · Python 3.12.12 · FastAPI 0.109.0 · Web3.py 6.15.1
 
-## Security Considerations
-
-⚠️ **This is a PoC for demonstration**. For production:
-- [ ] Add rate limiting and authentication
-- [ ] Use HTTPS, restrict CORS
-- [ ] Implement input sanitization
-- [ ] Add refund mechanism for failed jobs
-- [ ] Implement monitoring and logging
-- [ ] Add nonce/replay protection
 
 ## Future Enhancements
 
-- Support multiple payment tokens
 - Job result caching and storage
 - User accounts and history
-- Batch job requests
 - Webhook notifications
-- Subscription models
-- Additional EVM chains
 - Comprehensive test suite
 
 ## License

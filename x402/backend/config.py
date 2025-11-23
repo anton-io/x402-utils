@@ -9,7 +9,7 @@ BASE_SEPOLIA_RPC = os.getenv("BASE_RPC", "https://base-sepolia-rpc.publicnode.co
 CHAIN_ID = 84532  # Base Sepolia
 
 # Token Configuration
-TOKEN_ADDRESS = "0x82cabCB0F84d088218c22482737e6BB777FA980f"
+TOKEN_ADDRESS = "0x7143401013282067926d25e316f055fF3bc6c3FD"    # Base Sepolia U Token
 TOKEN_DECIMALS = 18
 
 # Payment Configuration

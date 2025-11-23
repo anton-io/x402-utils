@@ -76,18 +76,23 @@ class PaymentVerifier:
         expected_wei = self._to_token_wei(expected_amount)
 
         start_time = time.time()
-        start_block = self.w3.eth.block_number
+        current_block = self.w3.eth.block_number
+        # Look back 20 blocks to catch fast transactions
+        start_block = max(0, current_block - 20)
+        last_checked_block = start_block - 1
 
         while time.time() - start_time < timeout:
             try:
                 # Get latest block
                 current_block = self.w3.eth.block_number
 
-                if current_block > start_block:
-                    # Check for Transfer events
+                if current_block > last_checked_block:
+                    # Check for Transfer events from last_checked_block to current
+                    from_block = max(start_block, last_checked_block + 1)
+
                     transfer_filter = self.token_contract.events.Transfer.create_filter(
-                        fromBlock=start_block,
-                        toBlock=current_block,
+                        from_block=from_block,
+                        to_block=current_block,
                         argument_filters={
                             'from': from_address,
                             'to': self.recipient
@@ -100,9 +105,10 @@ class PaymentVerifier:
                         # Check if the amount matches
                         if event['args']['value'] >= expected_wei:
                             tx_hash = event['transactionHash'].hex()
+                            print(f"Payment verified: {tx_hash}")
                             return True, tx_hash
 
-                    start_block = current_block + 1
+                    last_checked_block = current_block
 
                 # Wait before next check
                 await asyncio.sleep(2)

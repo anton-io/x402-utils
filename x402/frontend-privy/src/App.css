@@ -1,0 +1,276 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Courier New', Courier, monospace;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.app {
+  max-width: 80ch;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.app-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: var(--border-thickness) solid var(--text-color);
+}
+
+.app-header h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: var(--text-color);
+  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: var(--text-color-alt);
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.network-info {
+  font-size: 1rem;
+  color: var(--text-color-alt);
+  margin-top: 0.5rem;
+}
+
+.wallet-section,
+.job-section,
+.status-section,
+.error-section,
+.output-section {
+  background-color: var(--background-color);
+  border: var(--border-thickness) solid var(--text-color);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.wallet-section h2,
+.job-section h2,
+.output-section h2 {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  color: var(--text-color);
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+.wallet-section h2::before,
+.job-section h2::before,
+.output-section h2::before {
+  content: '// ';
+  color: var(--text-color-alt);
+}
+
+.wallet-info p {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.btn {
+  font-family: 'Courier New', Courier, monospace;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: var(--border-thickness) solid var(--text-color);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-transform: uppercase;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.btn::before {
+  content: '» ';
+}
+
+.btn:hover:not(:disabled) {
+  background-color: var(--background-color-alt);
+}
+
+.btn:active:not(:disabled) {
+  transform: translate(2px, 2px);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  /* Use default styles */
+}
+
+.btn-secondary {
+  border-color: var(--text-color-alt);
+  color: var(--text-color-alt);
+}
+
+.btn-secondary::before {
+  content: '× ';
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--text-color-alt);
+  color: var(--background-color);
+}
+
+.job-select {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-family: 'Courier New', Courier, monospace;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  border: var(--border-thickness) solid var(--text-color);
+  margin-bottom: 1rem;
+  cursor: pointer;
+  line-height: 1.5;
+}
+
+.job-select:focus {
+  outline: none;
+  --border-thickness: 3px;
+}
+
+.job-params {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  border: var(--border-thickness) solid var(--text-color-alt);
+  background-color: var(--background-color);
+}
+
+.job-params h3 {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  color: var(--text-color);
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+.param-field {
+  margin-bottom: 1rem;
+}
+
+.param-field label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+.param-field label::before {
+  content: '$ ';
+  color: var(--text-color-alt);
+}
+
+.param-field input {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1rem;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  border: var(--border-thickness) solid var(--text-color);
+  line-height: 1.5;
+}
+
+.param-field input:focus {
+  outline: none;
+  --border-thickness: 3px;
+}
+
+.param-field input::placeholder {
+  color: var(--text-color-alt);
+}
+
+.status-section {
+  border-color: #10b981;
+  background-color: rgba(16, 185, 129, 0.05);
+}
+
+.status-message {
+  color: var(--text-color);
+  font-size: 1rem;
+}
+
+.error-section {
+  border-left: calc(var(--border-thickness) * 3) solid #ef4444;
+  background-color: rgba(239, 68, 68, 0.05);
+  border-top: var(--border-thickness) solid var(--text-color-alt);
+  border-right: var(--border-thickness) solid var(--text-color-alt);
+  border-bottom: var(--border-thickness) solid var(--text-color-alt);
+}
+
+.error-message {
+  color: var(--text-color);
+  font-size: 1rem;
+}
+
+.output-terminal {
+  background-color: var(--background-color-alt);
+  padding: 1rem;
+  border: var(--border-thickness) solid var(--text-color);
+  max-height: 400px;
+  overflow-y: auto;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.output-line {
+  color: var(--text-color);
+  margin-bottom: 0.25rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.5;
+  min-height: 1.5rem;
+}
+
+.loading {
+  text-align: center;
+  font-size: 1rem;
+  color: var(--text-color);
+  padding: 3rem;
+}
+
+code {
+  background-color: var(--background-color-alt);
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--text-color);
+  color: var(--text-color);
+  font-family: 'Courier New', Courier, monospace;
+}
+
+strong {
+  color: var(--text-color);
+  font-weight: 800;
+}
+
+/* Scrollbar styling */
+.output-terminal::-webkit-scrollbar {
+  width: 10px;
+}
+
+.output-terminal::-webkit-scrollbar-track {
+  background: var(--background-color);
+}
+
+.output-terminal::-webkit-scrollbar-thumb {
+  background: var(--text-color-alt);
+}
+
+.output-terminal::-webkit-scrollbar-thumb:hover {
+  background: var(--text-color);
+}

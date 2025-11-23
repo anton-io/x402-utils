@@ -54,6 +54,23 @@ const config: HardhatUserConfig = {
     cache: "./cache",
     artifacts: "./artifacts",
   },
+  etherscan: {
+    apiKey: {
+      // Single key for all chains under V2
+      default: process.env.ETHERSCAN_API_KEY,  // Your Etherscan V2 API key
+    },
+    // Custom config for Base Sepolia (uses V2 endpoint automatically)
+    customChains: [
+      {
+        network: "baseSepolia",
+        chainId: 84532,  // Required for V2's chainid param
+        urls: {
+          apiURL: "https://api.etherscan.io/v2/api",  // V2 endpoint
+          browserURL: "https://sepolia.basescan.org",
+        },
+      },
+    ],
+  },
 };
 
 export default config;

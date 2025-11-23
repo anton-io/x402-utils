@@ -151,13 +151,13 @@ npx hardhat run scripts/setPeers.ts --network sepolia
 npx hardhat run scripts/setPeers.ts --network baseSepolia
 
 # 3. Mint some tokens on Sepolia
-MINT_AMOUNT=100 npx hardhat run scripts/mint.ts --network sepolia
+MINT_AMOUNT=1000 npx hardhat run scripts/mint.ts --network sepolia
 
 # 4. Check balance
 npx hardhat run scripts/checkBalance.ts --network sepolia
 
 # 5. Send 10 tokens to Base Sepolia
-TRANSFER_AMOUNT=10 npx hardhat run scripts/transfer.ts --network sepolia
+TRANSFER_AMOUNT=100 npx hardhat run scripts/transfer.ts --network sepolia
 
 # 6. Wait ~5 minutes, then check Base Sepolia
 npx hardhat run scripts/checkBalance.ts --network baseSepolia

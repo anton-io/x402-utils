@@ -1,14 +1,19 @@
 #!/bin/bash
 # Quick start script for x402 PoC
 
+DIR_THIS="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# pip install fastapi web3 sse_starlette uvicorn
+
+
 echo "x402 PoC - Quick Start"
 echo "====================="
 echo ""
 
 # Check if virtual environment exists
-if [ ! -d "backend/venv" ]; then
+if [ ! -d "$DIR_THIS/backend/venv" ]; then
     echo "Creating virtual environment..."
-    cd backend
+    cd "$DIR_THIS/backend"
     python3 -m venv venv
     cd ..
 fi
@@ -18,16 +23,16 @@ echo "Activating virtual environment..."
 source backend/venv/bin/activate
 
 # Install dependencies if needed
-if [ ! -f "backend/venv/installed" ]; then
+if [ ! -f "$DIR_THIS/backend/venv/installed" ]; then
     echo "Installing dependencies..."
-    cd backend
+    cd "$DIR_THIS/backend"
     pip install -r requirements.txt
     touch venv/installed
     cd ..
 fi
 
 # Check if .env exists
-if [ ! -f "backend/.env" ]; then
+if [ ! -f "$DIR_THIS/backend/.env" ]; then
     echo ""
     echo "WARNING: backend/.env not found!"
     echo "Please copy backend/.env.example to backend/.env"
@@ -40,9 +45,9 @@ fi
 
 # Start backend
 echo ""
-echo "Starting backend server on http://localhost:8000..."
+echo "Starting backend server on http://localhost:8989..."
 echo ""
-cd backend
+cd "$DIR_THIS/backend"
 python main.py &
 BACKEND_PID=$!
 cd ..
@@ -54,7 +59,7 @@ sleep 2
 echo ""
 echo "Starting frontend server on http://localhost:3000..."
 echo ""
-cd frontend
+cd "$DIR_THIS/frontend-js"
 python3 -m http.server 3000 &
 FRONTEND_PID=$!
 cd ..
@@ -62,8 +67,8 @@ cd ..
 echo ""
 echo "====================="
 echo "Servers running!"
-echo "Backend:  http://localhost:8989"
-echo "Frontend: http://localhost:3000"
+echo "Backend:     http://localhost:8989"
+echo "Frontend-js: http://localhost:3000"
 echo "====================="
 echo ""
 echo "Press Ctrl+C to stop all servers"
