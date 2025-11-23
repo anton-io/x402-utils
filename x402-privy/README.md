@@ -1,4 +1,4 @@
-# x402 Protocol - Privy Frontend
+# x402 Utils - Privy Frontend
 
 A React + TypeScript frontend implementing the x402 payment protocol using [Privy](https://privy.io) for wallet integration.
 

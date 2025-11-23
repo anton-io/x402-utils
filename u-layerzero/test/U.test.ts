@@ -7,7 +7,7 @@ async function deployMockEndpointsAndOFTs() {
   const [owner, user] = await ethers.getSigners();
 
   // Mock endpoints (local chains)
-  const EndpointV2Mock = await ethers.getContractFactory("@layerzerolabs/test-devtools-evm-hardhat/contracts/mocks/EndpointV2Mock.sol:EndpointV2Mock");
+  const EndpointV2Mock = await ethers.getContractFactory("EndpointV2Mock");
   const endpointA = await EndpointV2Mock.deploy(EndpointId.ETHEREUM_V2_MAINNET);
   const endpointB = await EndpointV2Mock.deploy(EndpointId.ARBITRUM_V2_MAINNET);
 

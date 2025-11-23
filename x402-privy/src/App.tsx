@@ -239,7 +239,7 @@ function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>x402 Protocol with Privy</h1>
+        <h1>x402 Utils with Privy</h1>
         <p className="subtitle">Pay-per-execution API using blockchain payments</p>
         <p className="network-info">Base Sepolia · {config.token.symbol} Token</p>
       </header>

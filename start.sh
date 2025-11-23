@@ -2,7 +2,7 @@
 # Quick start script for x402 PoC
 # Starts: Backend, Frontend-JS, Frontend-Privy
 
-# pip install web3 sse_starlette uvicorn
+# pip install fastapi web3 sse_starlette uvicorn
 
 DIR_THIS="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 

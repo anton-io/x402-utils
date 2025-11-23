@@ -184,7 +184,8 @@ class X402Agent:
                 json={
                     "job_type": job_type,
                     "params": params,
-                    "wallet_address": self.account.address
+                    "wallet_address": self.account.address,
+                    "job_id": job_id  # Include job_id for x402
                 },
                 headers={
                     "Content-Type": "application/json",

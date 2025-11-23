@@ -4,6 +4,8 @@ A blockchain-based pay-per-execution service implementing the **x402 protocol** 
 
 **Powered by**: [LayerZero](https://layerzero.network/) · [Privy](https://privy.io/) · [Coinbase Base](https://base.org/) · [x402](https://x402.org/)
 
+**Live demo at**: https://x402.utils.com/
+
 **Status**: ✅ Production-ready PoC · All tests passing · Multiple frontends · Python agent
 
 ## 🚀 Built With Industry-Leading Technologies

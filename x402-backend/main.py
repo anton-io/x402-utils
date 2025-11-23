@@ -17,6 +17,7 @@ from config import (
 )
 from jobs.registry import job_registry
 from payments.base_token import PaymentVerifier
+from payments.x402_auth import verify_payment_signature, parse_x_payment_header
 from streaming.sse import create_sse_response
 
 
@@ -25,6 +26,7 @@ class JobRequest(BaseModel):
     job_type: str
     params: Dict
     wallet_address: str
+    job_id: Optional[str] = None  # Client-provided job ID for x402
 
 
 class PaymentConfirmation(BaseModel):
@@ -101,17 +103,23 @@ async def list_jobs():
 
 
 @app.post("/api/jobs/request")
-async def request_job(job_request: JobRequest):
+async def request_job(job_request: JobRequest, request: Request):
     """
-    Request a job execution - returns 402 Payment Required with payment details
+    Request a job execution
+
+    - With X-PAYMENT header: Verify signature and authorize immediately
+    - Without X-PAYMENT: Return 402 Payment Required with payment details
     """
     # Validate job type
     job_class = job_registry.get_job_class(job_request.job_type)
     if not job_class:
         raise HTTPException(status_code=400, detail=f"Unknown job type: {job_request.job_type}")
 
+    # Get or generate job ID
+    # For x402, client provides job_id; for traditional flow, we generate it
+    job_id = job_request.job_id or str(uuid.uuid4())
+
     # Create job instance for validation
-    job_id = str(uuid.uuid4())
     job = job_class(job_id=job_id, params=job_request.params)
 
     # Validate parameters
@@ -121,7 +129,47 @@ async def request_job(job_request: JobRequest):
 
     # Get price
     price = job_class.get_price()
+    amount_wei = str(int(price * 10**18))  # Convert to wei
 
+    # Check for X-PAYMENT header (x402 signature-based payment)
+    x_payment = request.headers.get("X-PAYMENT") or request.headers.get("x-payment")
+
+    if x_payment:
+        # Parse payment data
+        payment_data = parse_x_payment_header(x_payment)
+        if not payment_data:
+            raise HTTPException(status_code=400, detail="Invalid X-PAYMENT header format")
+
+        # Verify signature
+        is_valid, signer_address, error_msg = verify_payment_signature(
+            payment_data,
+            job_id,
+            amount_wei
+        )
+
+        if is_valid:
+            # Signature valid - authorize immediately
+            expiry = datetime.now(timezone.utc) + timedelta(seconds=PAYMENT_TIMEOUT_SECONDS)
+            pending_jobs[job_id] = {
+                "job": job,
+                "wallet_address": signer_address,
+                "price": price,
+                "expiry": expiry,
+                "paid": True,  # Mark as paid via signature
+                "payment_method": "x402_signature"
+            }
+
+            return {
+                "status": "authorized",
+                "job_id": job_id,
+                "message": "Payment authorized via x402 signature",
+                "signer": signer_address
+            }
+        else:
+            # Signature invalid
+            raise HTTPException(status_code=401, detail=f"Payment authorization failed: {error_msg}")
+
+    # No X-PAYMENT header - traditional flow
     # Store pending job
     expiry = datetime.now(timezone.utc) + timedelta(seconds=PAYMENT_TIMEOUT_SECONDS)
     pending_jobs[job_id] = {
