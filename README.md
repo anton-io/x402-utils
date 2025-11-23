@@ -29,7 +29,7 @@ This project showcases the integration of three powerful blockchain infrastructu
 ## 📸 See It In Action
 
 <p align="center">
-  <img src="x402-ping.png" alt="x402 Protocol Web Interface - Ping Job Execution" width="800">
+  <img src="x402-ping.jpg" alt="x402 Protocol Web Interface - Ping Job Execution" width="800">
   <br>
   <em>x402 web interface executing a ping job with real-time streaming results</em>
 </p>
