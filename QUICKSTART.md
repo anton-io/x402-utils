@@ -71,7 +71,7 @@ Press Ctrl+C to stop all servers
 The backend needs to know where to receive payments:
 
 ```bash
-cd backend
+cd x402-backend
 cp .env.example .env
 nano .env  # or vim, code, etc.
 ```
@@ -86,7 +86,7 @@ RECIPIENT_ADDRESS=0xYourWalletAddressHere
 Automatically created by `start.sh`, but you can customize:
 
 ```bash
-cd frontend-privy
+cd x402-privy
 nano .env
 ```
 
@@ -128,7 +128,7 @@ Should see Privy login interface with wallet connection options.
 ### 4. Test Python Agent
 
 ```bash
-cd agent
+cd x402-agent
 pip install -r requirements.txt
 python test_agent.py
 ```
@@ -185,7 +185,7 @@ The script is smart:
 ### Run the Agent
 
 ```bash
-cd agent
+cd x402-agent
 python x402_agent.py
 ```
 
@@ -196,7 +196,7 @@ Pings google.com every 3 minutes automatically.
 ### Backend won't start
 
 ```bash
-cd backend
+cd x402-backend
 source venv/bin/activate
 pip install -r requirements.txt
 python main.py
@@ -207,7 +207,7 @@ Check output for errors.
 ### Frontend-Privy build errors
 
 ```bash
-cd frontend-privy
+cd x402-privy
 rm -rf node_modules package-lock.json
 npm install
 npm run dev
@@ -228,28 +228,28 @@ kill -9 <PID>
 ```
 
 Or edit the port in:
-- Backend: `backend/config.py` → `PORT`
-- Frontend-Privy: `frontend-privy/vite.config.ts` → `server.port`
+- Backend: `x402-backend/config.py` → `PORT`
+- Frontend-Privy: `x402-privy/vite.config.ts` → `server.port`
 
 ### Agent "Payment authorization failed"
 
-Make sure `PAYMENT_RECIPIENT` in `agent/x402_agent.py` matches your backend's `RECIPIENT_ADDRESS` in `backend/.env`.
+Make sure `PAYMENT_RECIPIENT` in `x402-agent/x402_agent.py` matches your backend's `RECIPIENT_ADDRESS` in `x402-backend/.env`.
 
 ## 🎓 Learning Resources
 
 ### Understand the Code
 
-- **Backend**: `backend/main.py` - Main API server
-- **x402 Auth**: `backend/payments/x402_auth.py` - Signature verification
-- **React App**: `frontend-privy/src/App.tsx` - Full implementation
-- **Agent**: `agent/x402_agent.py` - Python client example
+- **Backend**: `x402-backend/main.py` - Main API server
+- **x402 Auth**: `x402-backend/payments/x402_auth.py` - Signature verification
+- **React App**: `x402-privy/src/App.tsx` - Full implementation
+- **Agent**: `x402-agent/x402_agent.py` - Python client example
 
 ### Documentation
 
 - `README.md` - Project overview
 - `CLAUDE.md` - Detailed architecture
-- `agent/README.md` - Agent documentation
-- `frontend-js/README-PRIVY.md` - Privy integration guide
+- `x402-agent/README.md` - Agent documentation
+- `x402-js/README-PRIVY.md` - Privy integration guide
 
 ### API Docs
 

@@ -16,7 +16,7 @@ Every **3 minutes**, the agent:
 ### 1. Install Dependencies
 
 ```bash
-cd agent
+cd x402-agent
 pip install -r requirements.txt
 ```
 

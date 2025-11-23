@@ -107,4 +107,4 @@ npm run lint
 - [Privy Docs](https://docs.privy.io)
 - [x402 Protocol](https://docs.privy.io/recipes/x402)
 - [Base Sepolia Faucet](https://www.coinbase.com/faucets/base-ethereum-goerli-faucet)
-- [Backend API](../backend/)
+- [Backend API](../x402-backend/)

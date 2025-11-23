@@ -2,7 +2,39 @@
 
 A blockchain-based pay-per-execution service implementing the **x402 protocol** (HTTP 402 Payment Required). Users pay with U tokens (or signature-based payment) on Base Sepolia to execute jobs, with results streamed back in real-time.
 
+**Powered by**: [LayerZero](https://layerzero.network/) · [Privy](https://privy.io/) · [Coinbase Base](https://base.org/) · [x402](https://x402.org/)
+
 **Status**: ✅ Production-ready PoC · All tests passing · Multiple frontends · Python agent
+
+## 🚀 Built With Industry-Leading Technologies
+
+This project showcases the integration of three powerful blockchain infrastructure providers:
+
+### 🔗 [LayerZero](https://layerzero.network/)
+**Omnichain Interoperability Protocol** - Powers the U token with seamless cross-chain transfers between Ethereum and Base. No wrapped tokens, no bridges to trust—just native cross-chain fungibility.
+
+### 🔐 [Privy](https://privy.io/)
+**Embedded Wallet Infrastructure** - Provides frictionless web3 onboarding with social logins, embedded wallets, and delegated transaction signing. Users can interact with blockchain apps without managing private keys.
+
+### 💳 [Coinbase](https://www.coinbase.com/)
+**Enterprise Blockchain Platform** - Leverages Base L2 for high-performance, low-cost transactions. Base provides the scalability needed for microtransactions in the x402 protocol.
+
+**Why This Stack?**
+- **LayerZero**: Cross-chain liquidity without fragmentation
+- **Privy**: Web2-level UX for web3 applications
+- **Base (Coinbase)**: Production-ready L2 with institutional backing
+
+---
+
+## 📸 See It In Action
+
+<p align="center">
+  <img src="x402-ping.png" alt="x402 Protocol Web Interface - Ping Job Execution" width="800">
+  <br>
+  <em>x402 web interface executing a ping job with real-time streaming results</em>
+</p>
+
+---
 
 ## 🎯 Overview
 
@@ -19,6 +51,31 @@ A blockchain-based pay-per-execution service implementing the **x402 protocol** 
   • React + Privy         • EIP-712 sigs          • Payment tracking
   • Python Agent          • SSE streaming         • Smart contracts
 ```
+
+## 💰 U Token - Cross-Chain Payment Token
+
+The x402 protocol uses **U Token**, a custom ERC20 token built with LayerZero's Omnichain Fungible Token (OFT) standard. This enables seamless cross-chain transfers between networks.
+
+### Why Cross-Chain?
+
+- **Ethereum (Sepolia)**: Primary network for liquidity and token minting
+- **Base (Sepolia)**: Optimized for high-performance, low-cost transactions
+- **LayerZero Bridge**: Automatic token bridging between chains in ~5-10 minutes
+
+### Getting Test Tokens
+
+A **public testnet faucet** is available for anyone to experiment with the x402 protocol:
+
+- **Faucet Address**: `0x63b7eF0778143E23f7320ab5bB77344aE66e7a57` (Base Sepolia)
+- **Distribution**: 1 U token per address per day
+- **Purpose**: Free tokens for testing and development
+- **Explorer**: [View on Blockscout](https://base-sepolia.blockscout.com/address/0x63b7eF0778143E23f7320ab5bB77344aE66e7a57)
+
+**U Token Addresses**:
+- Sepolia: `0x3edEa36d049fFeF9Ac3fC3646227ca81C9A87118`
+- Base Sepolia: `0x7143401013282067926d25e316f055fF3bc6c3FD`
+
+For more details on the U token and faucet management, see the `u-layerzero/` and `u-faucet/` directories.
 
 ## 🚀 Quick Start (1 Minute)
 
@@ -37,14 +94,14 @@ This automatically starts:
 
 1. **Configure backend:**
    ```bash
-   cd backend
+   cd x402-backend
    cp .env.example .env
    # Edit .env: RECIPIENT_ADDRESS=0xYourWalletAddress
    ```
 
 2. **Run backend:**
    ```bash
-   cd backend
+   cd x402-backend
    python -m venv venv
    source venv/bin/activate  # Windows: venv\Scripts\activate
    pip install -r requirements.txt
@@ -55,14 +112,14 @@ This automatically starts:
 
    **Option A: Vanilla JS (MetaMask/Coinbase Wallet)**
    ```bash
-   cd frontend-js
+   cd x402-js
    python -m http.server 3000
    # Visit: http://localhost:3000
    ```
 
    **Option B: React + Privy (Recommended - Full x402)**
    ```bash
-   cd frontend-privy
+   cd x402-privy
    npm install
    npm run dev
    # Visit: http://localhost:3001
@@ -70,7 +127,7 @@ This automatically starts:
 
 4. **Or run the Python agent:**
    ```bash
-   cd agent
+   cd x402-agent
    pip install -r requirements.txt
    python x402_agent.py  # Pings google.com every 3 minutes
    ```
@@ -126,7 +183,7 @@ This automatically starts:
 ### Configuration
 - **Network**: Base Sepolia (Chain ID: 84532)
 - **RPC**: https://base-sepolia-rpc.publicnode.com
-- **Token**: U at `0x82cabCB0F84d088218c22482737e6BB777FA980f`
+- **Token**: U at `0x7143401013282067926d25e316f055fF3bc6c3FD`
 - **Pricing**: 0.01 U per ping
 - **Payment timeout**: 300s (configurable via `PAYMENT_TIMEOUT` env var)
 
@@ -146,7 +203,7 @@ This automatically starts:
 Create a job class inheriting from `Job`:
 
 ```python
-# backend/jobs/my_job.py
+# x402-backend/jobs/my_job.py
 from decimal import Decimal
 from .base import Job
 
@@ -169,7 +226,7 @@ class MyJob(Job):
         yield "Complete!\n"
 ```
 
-Register in `backend/jobs/registry.py`:
+Register in `x402-backend/jobs/registry.py`:
 ```python
 from .my_job import MyJob
 
@@ -208,9 +265,34 @@ MIT License
 
 ## Resources
 
-- [Base Sepolia Explorer](https://sepolia.basescan.org/)
-- [Base Faucet](https://www.coinbase.com/faucets/base-ethereum-goerli-faucet)
-- [FastAPI Docs](https://fastapi.tiangolo.com/)
-- [Web3.py Docs](https://web3py.readthedocs.io/)
+### Blockchain Infrastructure
+- [LayerZero Docs](https://docs.layerzero.network/) - Omnichain interoperability protocol
+- [LayerZero Scan](https://testnet.layerzeroscan.com/) - Track cross-chain transactions
+- [Privy Docs](https://docs.privy.io/) - Embedded wallet infrastructure
+- [Base Docs](https://docs.base.org/) - Coinbase L2 documentation
+- [Base Sepolia Explorer](https://sepolia.basescan.org/) - Block explorer
+- [Base Faucet](https://www.coinbase.com/faucets/base-ethereum-goerli-faucet) - Get testnet ETH
+
+### Development Tools
+- [FastAPI Docs](https://fastapi.tiangolo.com/) - Python web framework
+- [Web3.py Docs](https://web3py.readthedocs.io/) - Python Ethereum library
+
+## 💬 Feedback & Contributions
+
+We'd love to hear from you! This project is open for ideas, suggestions, and contributions.
+
+### Share Your Thoughts
+
+- **💡 Ideas**: Have a feature idea or improvement suggestion? We want to hear it!
+- **🐛 Issues**: Found a bug or something not working as expected? Let us know!
+- **💬 Feedback**: General comments, questions, or thoughts about the x402 protocol? Reach out!
+- **🤝 Contributions**: Pull requests are welcome! Whether it's code, documentation, or examples.
+
+
+### Get In Touch 📧
+
+- **Share Use Cases**. Show us what you've built or plan to build with the x402 protocol.
+
+- **Open an issue** on this repository or submit a pull request. All contributions and feedback are appreciated! 🙏
 
 ---
